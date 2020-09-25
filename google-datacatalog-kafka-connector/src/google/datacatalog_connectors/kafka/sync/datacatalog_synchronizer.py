@@ -7,6 +7,7 @@ from google.datacatalog_connectors.commons.ingest \
     import datacatalog_metadata_ingestor
 from google.datacatalog_connectors.commons.monitoring \
     import metrics_processor
+from google.datacatalog_connectors.kafka import prepare
 
 
 class DataCatalogSynchronizer:
@@ -106,14 +107,12 @@ class DataCatalogSynchronizer:
     # Create factories
     def __create_assembled_entry_factory(self):
         return self._get_assembled_entry_factory()(
-            self.__entry_group_id, self.__metadata_definition,
-            self.__create_entry_factory())
+            self.__entry_group_id, self.__create_entry_factory())
 
     def __create_entry_factory(self):
         return self._get_entry_factory()(self.__project_id, self.__location_id,
-                                         self.__rbms_host,
-                                         self.__entry_group_id,
-                                         self.__metadata_definition)
+                                         self.__kafka_host,
+                                         self.__entry_group_id)
 
     # Begin extension methods
     def _before_run(self):
@@ -133,8 +132,7 @@ class DataCatalogSynchronizer:
     #     return self.__metadata_definition
     #
     def _log_entries(self, prepared_entries):
-        entries_len = sum([len(tables) for (_, tables) in prepared_entries],
-                          len(prepared_entries))
+        entries_len = len(prepared_entries)
         self.__metrics_processor.process_entries_length_metric(entries_len)
 
     def _log_metadata(self, metadata):
@@ -142,15 +140,6 @@ class DataCatalogSynchronizer:
             metadata)
         logging.info('\n%s topics ready to be ingested...',
                      len(metadata['topics']))
-
-    @classmethod
-    def _get_tag_factory(cls):
-        return prepare.datacatalog_tag_factory.DataCatalogTagFactory
-
-    @classmethod
-    def _get_tag_template_factory(cls):
-        return prepare.datacatalog_tag_template_factory. \
-            DataCatalogTagTemplateFactory
 
     @classmethod
     def _get_assembled_entry_factory(cls):
