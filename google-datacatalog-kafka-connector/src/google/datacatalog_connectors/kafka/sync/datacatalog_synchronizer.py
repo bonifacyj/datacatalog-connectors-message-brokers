@@ -50,60 +50,39 @@ class DataCatalogSynchronizer:
 
         self._log_entries(prepared_entries)
 
-    #
-    #     logging.info('\n==============Ingest metadata===============')
-    #
-    #     self.__delete_obsolete_metadata(prepared_entries)
-    #
-    #     self.__ingest_metadata(prepared_entries)
-    #
-    #     logging.info('\n============End %s-to-datacatalog============',
-    #                  self.__entry_group_id)
-    #     self._after_run()
-    #
-    #     return self.__task_id
-    #
+        logging.info('\n==============Ingest metadata===============')
+
+        self.__delete_obsolete_metadata(prepared_entries)
+
+        self.__ingest_metadata(prepared_entries)
+
+        logging.info('\n============End %s-to-datacatalog============',
+                     self.__entry_group_id)
+        self._after_run()
+
+        return self.__task_id
+
     def __prepare_datacatalog_entries(self, metadata):
         entry_factory = self.__create_assembled_entry_factory()
         prepared_entries = entry_factory. \
-            make_entries_from_table_container_metadata(
+            make_entries_from_cluster_metadata(
                 metadata)
         return prepared_entries
 
-    #
-    # def __delete_obsolete_metadata(self, prepared_entries):
-    #     # Since we can't rely on search returning the ingested entries,
-    #     # we clean up the obsolete entries before ingesting.
-    #     assembled_entries_data = []
-    #     for table_container_entry, table_related_entries in prepared_entries:
-    #         assembled_entries_data.append(table_container_entry)
-    #         assembled_entries_data.extend(table_related_entries)
-    #
-    #     cleaner = datacatalog_metadata_cleaner.DataCatalogMetadataCleaner(
-    #         self.__project_id, self.__location_id, self.__entry_group_id)
-    #     cleaner.delete_obsolete_metadata(
-    #         assembled_entries_data, 'system={}'.format(self.__entry_group_id))
-    #
-    # def __ingest_metadata(self, prepared_entries, tag_templates_dict):
-    #     logging.info('\nStarting to ingest custom metadata...')
-    #     ingestor = datacatalog_metadata_ingestor.DataCatalogMetadataIngestor(
-    #         self.__project_id, self.__location_id, self.__entry_group_id)
-    #
-    #     for table_container_entry, table_related_entries in prepared_entries:
-    #         assembled_entries_data = []
-    #         assembled_entries_data.append(table_container_entry)
-    #         assembled_entries_data.extend(table_related_entries)
-    #         ingestor.ingest_metadata(assembled_entries_data,
-    #                                  tag_templates_dict)
-    #
-    # def __add_database_name_from_connection_args(self):
-    #
-    #     if self.__connection_args:
-    #         database_name = self.__connection_args.get('database')
-    #
-    #         if database_name:
-    #             self.__metadata_definition['database_name'] = database_name
-    #
+    def __delete_obsolete_metadata(self, prepared_entries):
+        # Since we can't rely on search returning the ingested entries,
+        # we clean up the obsolete entries before ingesting.
+        cleaner = datacatalog_metadata_cleaner.DataCatalogMetadataCleaner(
+            self.__project_id, self.__location_id, self.__entry_group_id)
+        cleaner.delete_obsolete_metadata(
+            prepared_entries, 'system={}'.format(self.__entry_group_id))
+
+    def __ingest_metadata(self, prepared_entries):
+        logging.info('\nStarting to ingest custom metadata...')
+        ingestor = datacatalog_metadata_ingestor.DataCatalogMetadataIngestor(
+            self.__project_id, self.__location_id, self.__entry_group_id)
+        ingestor.ingest_metadata(prepared_entries)
+
     # Create factories
     def __create_assembled_entry_factory(self):
         return self._get_assembled_entry_factory()(
@@ -119,18 +98,9 @@ class DataCatalogSynchronizer:
         logging.info('\n============Start %s-to-datacatalog===========',
                      self.__entry_group_id)
 
-    #
-    # def _after_run(self):
-    #     self.__metrics_processor.process_elapsed_time_metric()
-    #
-    # def _enrich_metadata(self, metadata):
-    #     return metadata
-    #
-    # def _enrich_metadata_definition(self):
-    #     self.__add_database_name_from_connection_args()
-    #
-    #     return self.__metadata_definition
-    #
+    def _after_run(self):
+        self.__metrics_processor.process_elapsed_time_metric()
+
     def _log_entries(self, prepared_entries):
         entries_len = len(prepared_entries)
         self.__metrics_processor.process_entries_length_metric(entries_len)
