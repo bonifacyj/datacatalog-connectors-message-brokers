@@ -43,12 +43,12 @@ class DataCatalogSynchronizer:
 
         self._log_metadata(metadata)
 
-    #     logging.info('\n\n==============Prepare metadata===============')
-    #
-    #     prepared_entries = self.__prepare_datacatalog_entries(
-    #         metadata)
-    #
-    #     self._log_entries(prepared_entries)
+        logging.info('\n\n==============Prepare metadata===============')
+
+        prepared_entries = self.__prepare_datacatalog_entries(metadata)
+
+        self._log_entries(prepared_entries)
+
     #
     #     logging.info('\n==============Ingest metadata===============')
     #
@@ -62,12 +62,13 @@ class DataCatalogSynchronizer:
     #
     #     return self.__task_id
     #
-    # def __prepare_datacatalog_entries(self, metadata):
-    #     entry_factory = self.__create_assembled_entry_factory()
-    #     prepared_entries = entry_factory. \
-    #         make_entries_from_table_container_metadata(
-    #             metadata)
-    #     return prepared_entries
+    def __prepare_datacatalog_entries(self, metadata):
+        entry_factory = self.__create_assembled_entry_factory()
+        prepared_entries = entry_factory. \
+            make_entries_from_table_container_metadata(
+                metadata)
+        return prepared_entries
+
     #
     # def __delete_obsolete_metadata(self, prepared_entries):
     #     # Since we can't rely on search returning the ingested entries,
@@ -102,20 +103,19 @@ class DataCatalogSynchronizer:
     #         if database_name:
     #             self.__metadata_definition['database_name'] = database_name
     #
-    # # Create factories
-    # def __create_assembled_entry_factory(self):
-    #     return self._get_assembled_entry_factory()(
-    #         self.__entry_group_id, self.__metadata_definition,
-    #         self.__create_entry_factory())
-    #
-    # def __create_entry_factory(self):
-    #     return self._get_entry_factory()(self.__project_id, self.__location_id,
-    #                                      self.__rbms_host,
-    #                                      self.__entry_group_id,
-    #                                      self.__metadata_definition)
-    #
-    #
-    # # Begin extension methods
+    # Create factories
+    def __create_assembled_entry_factory(self):
+        return self._get_assembled_entry_factory()(
+            self.__entry_group_id, self.__metadata_definition,
+            self.__create_entry_factory())
+
+    def __create_entry_factory(self):
+        return self._get_entry_factory()(self.__project_id, self.__location_id,
+                                         self.__rbms_host,
+                                         self.__entry_group_id,
+                                         self.__metadata_definition)
+
+    # Begin extension methods
     def _before_run(self):
         logging.info('\n============Start %s-to-datacatalog===========',
                      self.__entry_group_id)
@@ -132,10 +132,10 @@ class DataCatalogSynchronizer:
     #
     #     return self.__metadata_definition
     #
-    # def _log_entries(self, prepared_entries):
-    #     entries_len = sum([len(tables) for (_, tables) in prepared_entries],
-    #                       len(prepared_entries))
-    #     self.__metrics_processor.process_entries_length_metric(entries_len)
+    def _log_entries(self, prepared_entries):
+        entries_len = sum([len(tables) for (_, tables) in prepared_entries],
+                          len(prepared_entries))
+        self.__metrics_processor.process_entries_length_metric(entries_len)
 
     def _log_metadata(self, metadata):
         self.__metrics_processor.process_metadata_payload_bytes_metric(

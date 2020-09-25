@@ -15,14 +15,13 @@
 # limitations under the License.
 
 import abc
-from abc import abstractmethod
-import json
+import argparse
 import logging
 import os
 import sys
 
-from google.datacatalog_connectors.rdbms.scrape import metadata_scraper, config
-from google.datacatalog_connectors.rdbms.sync import \
+from google.datacatalog_connectors.kafka.scrape import metadata_scraper
+from google.datacatalog_connectors.kafka.sync import \
     datacatalog_synchronizer
 
 ABC = abc.ABCMeta('ABC', (object,), {})  # compatible with Python 2 *and* 3
@@ -45,20 +44,10 @@ class DatacatalogCli(ABC):
             project_id=args.datacatalog_project_id,
             location_id=args.datacatalog_location_id,
             entry_group_id=self._get_entry_group_id(args),
-            rbms_host=self._get_host_arg(args),
-            metadata_definition=self._metadata_definition(),
+            kafka_host=self._get_host_arg(args),
             metadata_scraper=self._get_metadata_scraper(),
             connection_args=self._get_connection_args(args),
-            query=self._query(args),
-            csv_path=args.raw_metadata_csv,
-            enable_monitoring=args.enable_monitoring,
-            user_config=self._get_user_config()).run()
-
-    def _metadata_definition(self):
-        path = self._get_metadata_definition_path()
-
-        with open(path, 'r') as f:
-            return json.load(f)
+            enable_monitoring=args.enable_monitoring).run()
 
     def _get_datacatalog_synchronizer(self):
         return datacatalog_synchronizer.DataCatalogSynchronizer
@@ -66,55 +55,42 @@ class DatacatalogCli(ABC):
     def _get_metadata_scraper(self):
         return metadata_scraper.MetadataScraper
 
-    def _query(self, args):
-        if not args.raw_metadata_csv:
-            path = self._get_query_path(args)
-
-            with open(path, 'r') as f:
-                data = f.read()
-                return data
-
-    def _get_user_config(self):
-        path = self._get_user_config_path()
-        if path:
-            user_config = config.Config(path)
-            return user_config
-        return None
-
-    @abstractmethod
-    def _get_metadata_definition_path(self):
-        pass
-
-    @abstractmethod
     def _get_host_arg(self, args):
-        pass
+        return args.kafka_host
 
-    @abstractmethod
     def _get_entry_group_id(self, args):
-        pass
+        return args.datacatalog_entry_group_id or 'kafka'
 
-    @abstractmethod
     def _parse_args(self, argv):
-        pass
+        parser = argparse.ArgumentParser(
+            description='Command line to sync kafka '
+            'metadata to Datacatalog')
 
-    def _get_user_config_path(self):
-        user_config_path = os.path.join(os.getcwd(), 'ingest_cfg.yaml')
-        if os.path.exists(user_config_path):
-            return user_config_path
-        return None
+        parser.add_argument('--datacatalog-project-id',
+                            help='Your Google Cloud project ID',
+                            required=True)
+        parser.add_argument(
+            '--datacatalog-location-id',
+            help='Location ID to be used for your Google Cloud Datacatalog',
+            required=True)
+        parser.add_argument('--datacatalog-entry-group-id',
+                            help='Entry group ID to be used for your Google '
+                            'Cloud Datacatalog')
+        parser.add_argument('--kafka-host',
+                            help='Your kafka server host',
+                            required=True)
 
-    # Begin RDBMS connection methods
-    def _get_query_path(self, args):
-        if not args.raw_metadata_csv:
-            raise NotImplementedError(
-                'Implementing this method is required to connect to a RDBMS!')
+        parser.add_argument('--service-account-path',
+                            help='Local Service Account path '
+                            '(Can be suplied as '
+                            'GOOGLE_APPLICATION_CREDENTIALS env '
+                            'var)')
+        parser.add_argument('--enable-monitoring',
+                            help='Enables monitoring metrics on the connector')
+        return parser.parse_args(argv)
 
     def _get_connection_args(self, args):
-        if not args.raw_metadata_csv:
-            raise NotImplementedError(
-                'Implementing this method is required to connect to a RDBMS!')
-
-    # End RDBMS connection methods
+        return {'bootstrap.servers': args.kafka_host}
 
 
 def main():

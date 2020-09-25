@@ -13,8 +13,8 @@ class MetadataScraper:
         metadata = self._create_metadata_dict(metadata)
         return metadata
 
-    def _get_metadata_from_message_broker_connection(self, bootstrap_servers):
-        consumer = Consumer({'bootstrap.servers': bootstrap_servers})
+    def _get_metadata_from_message_broker_connection(self, connection_args):
+        consumer = Consumer(connection_args)
         try:
             cluster_metadata = consumer.list_topics()
             topic_names = cluster_metadata.topics.keys()
