@@ -1,0 +1,3 @@
+{
+  "topics": ["temperature", "humidity", "incoming_calls", "guests"]
+}
