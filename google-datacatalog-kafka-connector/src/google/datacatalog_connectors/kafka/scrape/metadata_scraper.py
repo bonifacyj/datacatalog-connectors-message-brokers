@@ -14,8 +14,9 @@ class MetadataScraper:
         return metadata
 
     def _get_metadata_from_message_broker_connection(self, connection_args):
-        consumer = Consumer(connection_args)
+        consumer = None
         try:
+            consumer = Consumer(connection_args)
             cluster_metadata = consumer.list_topics()
             topic_names = cluster_metadata.topics.keys()
             return topic_names
@@ -24,7 +25,8 @@ class MetadataScraper:
                 'Error connecting to the system to extract metadata.')
             raise
         finally:
-            consumer.close()
+            if consumer:
+                consumer.close()
 
     def _create_metadata_dict(self, metadata):
         dict_metadata = {'topics': metadata}

@@ -14,6 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .test_utils import FakeDataCatalogEntryFactory
+from .test_utils import FakeDataCatalogEntryFactory, FakeMetadataScraper
 
-__all__ = 'FakeDataCatalogEntryFactory'
+__all__ = ('FakeDataCatalogEntryFactory', 'FakeMetadataScraper')
