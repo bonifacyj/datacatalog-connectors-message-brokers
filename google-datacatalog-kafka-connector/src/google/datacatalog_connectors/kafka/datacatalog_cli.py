@@ -90,7 +90,7 @@ class DatacatalogCli(ABC):
         return parser.parse_args(argv)
 
     def _get_connection_args(self, args):
-        return {'bootstrap.servers': args.kafka_host}
+        return {'bootstrap.servers': args.kafka_host, 'group.id': 'kafka2dc'}
 
 
 def main():

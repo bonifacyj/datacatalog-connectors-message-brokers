@@ -30,6 +30,11 @@ setuptools.setup(
     packages=setuptools.find_packages(where='./src'),
     namespace_packages=['google', 'google.datacatalog_connectors'],
     package_dir={'': 'src'},
+    entry_points={
+        'console_scripts': [
+            'google-datacatalog-kafka-connector = google.datacatalog_connectors.kafka:main',
+        ],
+    },
     include_package_data=True,
     install_requires=('pandas==0.24.2', 'gcsfs',
                       'google-datacatalog-connectors-commons', 'pyYAML',
