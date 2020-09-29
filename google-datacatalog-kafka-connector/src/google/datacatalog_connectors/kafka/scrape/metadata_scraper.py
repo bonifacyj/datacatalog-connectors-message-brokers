@@ -1,6 +1,6 @@
 import logging
 from confluent_kafka import Consumer
-from .metadata_constants import MetadataDictKeys
+from google.datacatalog_connectors.kafka.config.metadata_constants import MetadataDictKeys
 
 
 class MetadataScraper:
