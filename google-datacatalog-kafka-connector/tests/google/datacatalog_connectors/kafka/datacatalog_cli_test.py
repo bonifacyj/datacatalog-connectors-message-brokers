@@ -14,7 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .test_utils import FakeDataCatalogEntryFactory, FakeMetadataScraper, FakeDataCatalogCLI
+import unittest
 
-__all__ = ('FakeDataCatalogEntryFactory', 'FakeMetadataScraper',
-           'FakeDataCatalogCLI')
+from . import test_utils
+import mock
+
+
+@mock.patch('google.datacatalog_connectors.kafka.sync.'
+            'datacatalog_synchronizer.DataCatalogSynchronizer.__init__',
+            lambda self, **kargs: None)
+class DatacatalogCLITestCase(unittest.TestCase):
+
+    @mock.patch('google.datacatalog_connectors.kafka.sync.'
+                'datacatalog_synchronizer.DataCatalogSynchronizer.run')
+    def test_datacatalog_cli_run_should_not_raise_error(self, run):
+        cli = test_utils.FakeDataCatalogCLI()
+        cli.run({})
+        self.assertEqual(run.call_count, 1)
