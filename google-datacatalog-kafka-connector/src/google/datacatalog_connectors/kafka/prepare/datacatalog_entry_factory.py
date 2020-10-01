@@ -53,7 +53,8 @@ class DataCatalogEntryFactory(BaseEntryFactory):
         entry.user_specified_type = 'kafka_cluster'
         entry.user_specified_system = self.__entry_group_id
 
-        entry.display_name = self._format_display_name(cluster_id)
+        entry.display_name = self._format_display_name(
+            "Kafka cluster {}".format(cluster_id))
 
         entry.name = datacatalog_v1beta1.DataCatalogClient.entry_path(
             self.__project_id, self.__location_id, self.__entry_group_id,
