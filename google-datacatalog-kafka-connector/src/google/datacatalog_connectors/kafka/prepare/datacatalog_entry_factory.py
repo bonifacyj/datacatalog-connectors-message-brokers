@@ -4,8 +4,6 @@ from google.datacatalog_connectors.commons.prepare.base_entry_factory import \
 
 
 class DataCatalogEntryFactory(BaseEntryFactory):
-    NO_VALUE_SPECIFIED = 'UNDEFINED'
-    EMPTY_TOKEN = '?'
 
     def __init__(self, project_id, location_id, metadata_host_server,
                  entry_group_id):
