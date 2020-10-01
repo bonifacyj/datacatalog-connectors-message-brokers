@@ -3,6 +3,7 @@ import unittest
 
 from google.datacatalog_connectors.commons_test import utils
 from google.datacatalog_connectors.kafka.prepare.datacatalog_entry_factory import DataCatalogEntryFactory
+from google.datacatalog_connectors.kafka.config.metadata_constants import MetadataDictKeys
 import mock
 
 
@@ -30,7 +31,7 @@ class DataCatalogEntryFactoryTestCase(unittest.TestCase):
 
         metadata = utils.Utils.convert_json_to_object(self.__MODULE_PATH,
                                                       'test_metadata.json')
-        topics = metadata["topics"]
+        topics = metadata[MetadataDictKeys.TOPICS]
 
         for topic in topics:
             entry_id, entry = self.__entry_factory.make_entry_for_topic(topic)
@@ -45,6 +46,19 @@ class DataCatalogEntryFactoryTestCase(unittest.TestCase):
                 entry.linked_resource)
             self.assertIn(topic, entry.display_name)
 
-    def test_cluster_without_topics_should_be_converted_to_dc_entry(  # noqa
+    def test_cluster_metadata_should_be_converted_to_dc_entries(
             self, entry_path):
-        pass  # it is here so that I don't forget to implement it in the next iteration
+        entry_path.return_value = \
+            DataCatalogEntryFactoryTestCase.__MOCKED_ENTRY_PATH
+        metadata = utils.Utils.convert_json_to_object(self.__MODULE_PATH,
+                                                      'test_metadata.json')
+        cluster_id = metadata[MetadataDictKeys.CLUSTER_ID]
+        entry_id, entry = self.__entry_factory.make_entry_for_cluster(metadata)
+        self.assertIsNotNone(entry_id)
+        self.assertEqual('kafka_cluster', entry.user_specified_type)
+        self.assertEqual('kafka', entry.user_specified_system)
+        self.assertEqual(DataCatalogEntryFactoryTestCase.__MOCKED_ENTRY_PATH,
+                         entry.name)
+        self.assertIn(DataCatalogEntryFactoryTestCase.__METADATA_SERVER_HOST,
+                      entry.linked_resource)
+        self.assertIn(cluster_id, entry.display_name)
