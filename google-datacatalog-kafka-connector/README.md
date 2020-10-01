@@ -15,23 +15,21 @@ TBA: widgets
 
 ## Table of Contents
 
-<!-- toc -->
+<!-- TOC -->
 
-- [1. Installation](#1-installation)
-  * [1.1. Mac/Linux](#11-maclinux)
-  * [1.2. Windows](#12-windows)
-- [2. Install from source](#2-install-from-source)
-  * [2.1. Get the code](#21-get-the-code)
-  * [2.2. Virtualenv](#22-virtualenv)
-      - [2.2.1. Install Python 3.6](#221-install-python-36)
-      - [2.2.2. Create and activate a *virtualenv*](#222-create-and-activate-a-virtualenv)
-      - [2.2.3. Install](#223-install)
-- [3. Developer environment](#3-developer-environment)
-  * [3.1. Install and run YAPF formatter](#31-install-and-run-yapf-formatter)
-  * [3.2. Install and run Flake8 linter](#32-install-and-run-flake8-linter)
-  * [3.3. Install the package in editable mode (i.e. setuptools “develop mode”)](#33-install-the-package-in-editable-mode-ie-setuptools-develop-mode)
-  * [3.4. Run the unit tests](#34-run-the-unit-tests)
-- [4. Setting up the RDBMS on a new connector](#4-setting-up-the-rdbms-on-a-new-connector)
+- [google-datacatalog-kafka-connector](#google-datacatalog-kafka-connector)
+  - [Table of Contents](#table-of-contents)
+  - [1. Installation](#1-installation)
+    - [1.1. Mac/Linux](#11-maclinux)
+    - [1.2. Windows](#12-windows)
+  - [2. Install from source](#2-install-from-source)
+    - [2.1. Get the code](#21-get-the-code)
+    - [2.2. Virtualenv](#22-virtualenv)
+  - [3. Developer environment](#3-developer-environment)
+    - [3.1. Install and run YAPF formatter](#31-install-and-run-yapf-formatter)
+    - [3.2. Install and run Flake8 linter](#32-install-and-run-flake8-linter)
+    - [3.3. Install the package in editable mode (i.e. setuptools “develop mode”)](#33-install-the-package-in-editable-mode-ie-setuptools-develop-mode)
+    - [3.4. Run the unit tests](#34-run-the-unit-tests)
 
 <!-- tocstop -->
 
