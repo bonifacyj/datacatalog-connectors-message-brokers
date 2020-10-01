@@ -5,14 +5,12 @@ from google.datacatalog_connectors.kafka.config.metadata_constants import Metada
 
 class MetadataScraper:
 
-    def __init__(self):
-        pass
+    def __init__(self, consumer):
+        self._consumer = consumer
 
-    def get_metadata(self, connection_args):
-        consumer = None
+    def get_metadata(self):
         try:
-            consumer = Consumer(connection_args)
-            raw_metadata = consumer.list_topics()
+            raw_metadata = self._consumer.list_topics(timeout=20)
             topic_metadata = self._get_topic_metadata(raw_metadata)
             cluster_metadata = self._get_cluster_metadata(raw_metadata)
             cluster_metadata.update(topic_metadata)
@@ -22,8 +20,7 @@ class MetadataScraper:
                 'Error connecting to the system to extract metadata.')
             raise
         finally:
-            if consumer:
-                consumer.close()
+            self._consumer.close()
 
     def _get_topic_metadata(self, metadata_object):
         topic_names = metadata_object.topics.keys()
