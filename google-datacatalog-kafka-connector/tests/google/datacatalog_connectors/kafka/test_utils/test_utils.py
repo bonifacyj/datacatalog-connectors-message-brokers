@@ -12,16 +12,26 @@ class FakeDataCatalogEntryFactory(DataCatalogEntryFactory):
         return entry_id, entry
 
 
-class FakeMetadataScraper(MetadataScraper):
+class FakeKafkaConsumer(mock.MagicMock):
 
-    def _get_metadata_from_message_broker_connection(self, connection_args):
-        return mock.MagicMock()
+    def __init__(self):
+        raw_metadata = mock.MagicMock()
+        raw_metadata.topics = {
+            "testTopic0": mock.MagicMock(),
+            "testTopic1": mock.MagicMock()
+        }
+        raw_metadata.cluster_id = "TestClusterID"
+        raw_metadata.brokers = {
+            "testBroker0": mock.MagicMock(),
+            "testBroker1": mock.MagicMock()
+        }
+        self.list_topics.return_value = raw_metadata
 
 
 class FakeDataCatalogCLI(DatacatalogCli):
 
-    def _get_metadata_scraper(self):
-        return FakeMetadataScraper
+    def _get_kafka_consumer(self, args):
+        return FakeKafkaConsumer()
 
     def _parse_args(self, argv):
         args = MockedObject()
