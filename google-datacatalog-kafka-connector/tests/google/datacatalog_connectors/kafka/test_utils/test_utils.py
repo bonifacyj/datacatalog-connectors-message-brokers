@@ -14,7 +14,7 @@ class FakeDataCatalogEntryFactory(DataCatalogEntryFactory):
 
 class FakeKafkaConsumer(mock.MagicMock):
 
-    def __init__(self):
+    def list_topics(self, timeout=-1):
         raw_metadata = mock.MagicMock()
         raw_metadata.topics = {
             "testTopic0": mock.MagicMock(),
@@ -25,7 +25,7 @@ class FakeKafkaConsumer(mock.MagicMock):
             "testBroker0": mock.MagicMock(),
             "testBroker1": mock.MagicMock()
         }
-        self.list_topics.return_value = raw_metadata
+        return raw_metadata
 
 
 class FakeDataCatalogCLI(DatacatalogCli):

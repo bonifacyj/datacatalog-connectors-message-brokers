@@ -29,7 +29,7 @@ class MetadataScraperTestCase(unittest.TestCase):
         kafka_consumer = test_utils.FakeKafkaConsumer()
         scraper = MetadataScraper(kafka_consumer)
         metadata = scraper.get_metadata()
-        self.assertEqual(1, len(metadata))
+        self.assertGreater(len(metadata), 0)
 
     def test_scrape_metadata_on_connection_exception_should_re_raise(self):
         test_config = {'bootstrap.servers': 'fake_host', 'group.id': 'test_id'}

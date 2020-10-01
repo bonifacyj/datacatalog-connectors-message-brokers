@@ -20,6 +20,7 @@ import unittest
 from .. import test_utils
 from google.datacatalog_connectors.kafka.sync import \
     datacatalog_synchronizer
+from google.datacatalog_connectors.kafka.scrape.metadata_scraper import MetadataScraper
 import mock
 
 
@@ -80,8 +81,8 @@ class DatacatalogSynchronizerTestCase(unittest.TestCase):
             DatacatalogSynchronizerTestCase.__LOCATION_ID,
             DatacatalogSynchronizerTestCase.__ENTRY_GROUP_ID,
             DatacatalogSynchronizerTestCase.__HOST,
-            test_utils.FakeMetadataScraper,
-            {'bootstrap.servers': 'test_address'},
+            MetadataScraper,
+            test_utils.FakeKafkaConsumer,
             enable_monitoring=True)
 
         synchronizer.run()
