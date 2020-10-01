@@ -18,8 +18,8 @@ import os
 import unittest
 
 from .. import test_utils
-from google.datacatalog_connectors.kafka.scrape.metadata_scraper import MetadataScraper
-import mock
+from google.datacatalog_connectors.kafka.scrape.\
+    metadata_scraper import MetadataScraper
 
 
 class MetadataScraperTestCase(unittest.TestCase):

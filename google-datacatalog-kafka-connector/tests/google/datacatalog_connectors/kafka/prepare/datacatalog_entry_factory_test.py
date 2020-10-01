@@ -2,7 +2,8 @@ import os
 import unittest
 
 from google.datacatalog_connectors.commons_test import utils
-from google.datacatalog_connectors.kafka.prepare.datacatalog_entry_factory import DataCatalogEntryFactory
+from google.datacatalog_connectors.kafka.prepare.\
+    datacatalog_entry_factory import DataCatalogEntryFactory
 import mock
 
 
@@ -44,7 +45,3 @@ class DataCatalogEntryFactoryTestCase(unittest.TestCase):
                 DataCatalogEntryFactoryTestCase.__METADATA_SERVER_HOST,
                 entry.linked_resource)
             self.assertIn(topic, entry.display_name)
-
-    def test_cluster_without_topics_should_be_converted_to_dc_entry(  # noqa
-            self, entry_path):
-        pass  # it is here so that I don't forget to implement it in the next iteration

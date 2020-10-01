@@ -33,7 +33,7 @@ class AssembledEntryFactoryTestCase(unittest.TestCase):
             AssembledEntryFactoryTestCase.__MOCKED_ENTRY_PATH
         metadata = utils.Utils.convert_json_to_object(self.__MODULE_PATH,
                                                       'test_metadata.json')
-        assembled_entries = self.__assembled_entry_factory.make_entries_from_cluster_metadata(
-            metadata)
+        assembled_entries = self.__assembled_entry_factory.\
+            make_entries_from_cluster_metadata(metadata)
         topics = metadata["topics"]
         self.assertEqual(len(topics), len(assembled_entries))
