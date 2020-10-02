@@ -15,7 +15,7 @@ class MetadataScraper:
             cluster_metadata = self._get_cluster_metadata(raw_metadata)
             cluster_metadata.update(topic_metadata)
             return cluster_metadata
-        except:  # noqa:E722
+        except:  # noqa:E722 silence linter complaint about bare except
             logging.error(
                 'Error connecting to the system to extract metadata.')
             raise

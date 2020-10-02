@@ -75,6 +75,7 @@ class DatacatalogSynchronizerTestCase(unittest.TestCase):
             process_metadata_payload_bytes_metric, process_elapsed_time_metric,
             delete_obsolete_metadata, ingest_metadata,
             make_entries_from_cluster_metadata, get_metadata):
+        # Test that all synchronizer calls go through and it doesn't break in the middle
         make_entries_from_cluster_metadata.return_value = [{}]
 
         synchronizer = datacatalog_synchronizer.DataCatalogSynchronizer(
