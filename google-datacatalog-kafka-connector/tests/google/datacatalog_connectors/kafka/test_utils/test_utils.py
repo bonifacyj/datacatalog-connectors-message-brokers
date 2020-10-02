@@ -1,4 +1,5 @@
 import mock
+from google.cloud import datacatalog_v1beta1
 from google.datacatalog_connectors.kafka.prepare.\
     datacatalog_entry_factory import DataCatalogEntryFactory
 from google.datacatalog_connectors.kafka.datacatalog_cli import DatacatalogCli
@@ -51,3 +52,18 @@ class MockedObject(object):
 
     def __getitem__(self, key):
         return self.__dict__[key]
+
+
+def get_test_topic_entry():
+    """
+    This method creates a test Entry based on metadata
+    provided in test_data/test_metadata_one_topic.json file
+    :return: test DC Entry
+    """
+    entry = datacatalog_v1beta1.types.Entry()
+    entry.user_specified_type = 'kafka_topic'
+    entry.user_specified_system = 'kafka'
+    entry.display_name = 'temperature'
+    entry.name = 'mocked_entry_path'
+    entry.linked_resource = '//metadata_host//temperature'
+    return entry
