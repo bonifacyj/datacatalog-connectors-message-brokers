@@ -1,7 +1,7 @@
 # datacatalog-connectors-message-brokers
 
-This repository contains sample code with integration between Data Catalog and Kafka system. 
-In the future, it will be populated with connectors integrating Data Catalog with other message brokers as well.
+This repository contains sample code with integration between Data Catalog and message broker systems. 
+Currently, only Apache Kafka is supported.
 
 **Disclaimer: This is not an officially supported Google product.**
 
