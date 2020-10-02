@@ -2,8 +2,10 @@ import os
 import unittest
 
 from google.datacatalog_connectors.commons_test import utils
-from google.datacatalog_connectors.kafka.prepare.datacatalog_entry_factory import DataCatalogEntryFactory
-from google.datacatalog_connectors.kafka.config.metadata_constants import MetadataDictKeys
+from google.datacatalog_connectors.kafka.prepare.\
+    datacatalog_entry_factory import DataCatalogEntryFactory
+from google.datacatalog_connectors.kafka.config.\
+    metadata_constants import MetadataDictKeys
 import mock
 
 
@@ -13,10 +15,7 @@ class DataCatalogEntryFactoryTestCase(unittest.TestCase):
     __LOCATION_ID = 'location_id'
     __ENTRY_GROUP_ID = 'kafka'
     __MOCKED_ENTRY_PATH = 'mocked_entry_path'
-
     __METADATA_SERVER_HOST = 'metadata_host'
-    __PREPARE_PACKAGE = 'google.datacatalog_connectors.kafka.prepare'
-
     __MODULE_PATH = os.path.dirname(os.path.abspath(__file__))
 
     def setUp(self):

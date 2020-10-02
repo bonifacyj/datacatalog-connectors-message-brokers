@@ -1,6 +1,6 @@
 import mock
-from google.datacatalog_connectors.kafka.prepare.datacatalog_entry_factory import DataCatalogEntryFactory
-from google.datacatalog_connectors.kafka.scrape.metadata_scraper import MetadataScraper
+from google.datacatalog_connectors.kafka.prepare.\
+    datacatalog_entry_factory import DataCatalogEntryFactory
 from google.datacatalog_connectors.kafka.datacatalog_cli import DatacatalogCli
 
 

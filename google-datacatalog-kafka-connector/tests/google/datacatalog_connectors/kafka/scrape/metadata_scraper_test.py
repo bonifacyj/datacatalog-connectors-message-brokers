@@ -14,13 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import unittest
 
 from confluent_kafka import Consumer
 
 from .. import test_utils
-from google.datacatalog_connectors.kafka.scrape.metadata_scraper import MetadataScraper
+from google.datacatalog_connectors.kafka.scrape.\
+    metadata_scraper import MetadataScraper
 
 
 class MetadataScraperTestCase(unittest.TestCase):

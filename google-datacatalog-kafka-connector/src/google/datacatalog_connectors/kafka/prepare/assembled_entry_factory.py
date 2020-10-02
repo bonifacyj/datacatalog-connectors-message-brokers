@@ -17,7 +17,8 @@
 import logging
 
 from google.datacatalog_connectors.commons import prepare
-from google.datacatalog_connectors.kafka.config.metadata_constants import MetadataDictKeys
+from google.datacatalog_connectors.kafka.config.\
+    metadata_constants import MetadataDictKeys
 
 
 class AssembledEntryFactory:

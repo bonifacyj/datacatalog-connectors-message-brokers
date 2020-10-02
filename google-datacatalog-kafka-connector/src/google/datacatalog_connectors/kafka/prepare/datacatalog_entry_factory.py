@@ -2,12 +2,11 @@ from google.cloud import datacatalog_v1beta1
 from google.datacatalog_connectors.commons.prepare.base_entry_factory import \
     BaseEntryFactory
 
-from google.datacatalog_connectors.kafka.config.metadata_constants import MetadataDictKeys
+from google.datacatalog_connectors.kafka.config.\
+    metadata_constants import MetadataDictKeys
 
 
 class DataCatalogEntryFactory(BaseEntryFactory):
-    NO_VALUE_SPECIFIED = 'UNDEFINED'
-    EMPTY_TOKEN = '?'
 
     def __init__(self, project_id, location_id, metadata_host_server,
                  entry_group_id):

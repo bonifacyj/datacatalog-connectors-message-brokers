@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import abc
 import argparse
 import logging
 import os
@@ -26,10 +25,8 @@ from google.datacatalog_connectors.kafka.scrape import metadata_scraper
 from google.datacatalog_connectors.kafka.sync import \
     datacatalog_synchronizer
 
-ABC = abc.ABCMeta('ABC', (object,), {})  # compatible with Python 2 *and* 3
 
-
-class DatacatalogCli(ABC):
+class DatacatalogCli():
 
     def run(self, argv):
         """Runs the command line."""
