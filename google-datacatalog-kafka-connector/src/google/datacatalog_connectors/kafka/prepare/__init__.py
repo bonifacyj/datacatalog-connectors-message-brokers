@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2019 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# package named mysql_ to not conflict with mysql.connector in scrape package
+from .assembled_entry_factory import AssembledEntryFactory
+from .datacatalog_entry_factory import DataCatalogEntryFactory
 
-from .datacatalog_cli import main
-
-__all__ = ['main']
+__all__ = ('AssembledEntryFactory', 'DataCatalogEntryFactory')
