@@ -49,16 +49,10 @@ class DataCatalogEntryFactoryTestCase(unittest.TestCase):
             DataCatalogEntryFactoryTestCase.__MOCKED_ENTRY_PATH
         metadata = utils.Utils.convert_json_to_object(self.__MODULE_PATH,
                                                       'test_metadata.json')
-        cluster_id = metadata[MetadataDictKeys.CLUSTER_ID]
         entry_id, entry = self.__entry_factory.make_entry_for_cluster(metadata)
+        expected_entry = test_utils.get_test_cluster_entry()
         self.assertIsNotNone(entry_id)
-        self.assertEqual('kafka_cluster', entry.user_specified_type)
-        self.assertEqual('kafka', entry.user_specified_system)
-        self.assertEqual(DataCatalogEntryFactoryTestCase.__MOCKED_ENTRY_PATH,
-                         entry.name)
-        self.assertIn(DataCatalogEntryFactoryTestCase.__METADATA_SERVER_HOST,
-                      entry.linked_resource)
-        self.assertIn(cluster_id, entry.display_name)
+        self.assertEqual(entry, expected_entry)
 
     def compare_entries(self, entry1, entry2, msg=None):
         if not msg:

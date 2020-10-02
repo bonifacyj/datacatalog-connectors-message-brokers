@@ -15,7 +15,9 @@
 # limitations under the License.
 
 from .test_utils import FakeDataCatalogEntryFactory,\
-    FakeKafkaConsumer, FakeDataCatalogCLI, get_test_topic_entry
+    FakeKafkaConsumer, FakeDataCatalogCLI,\
+    get_test_topic_entry, get_test_cluster_entry
 
 __all__ = ('FakeDataCatalogEntryFactory', 'FakeKafkaConsumer',
-           'FakeDataCatalogCLI', 'get_test_topic_entry')
+           'FakeDataCatalogCLI', 'get_test_topic_entry',
+           'get_test_cluster_entry')

@@ -67,3 +67,18 @@ def get_test_topic_entry():
     entry.name = 'mocked_entry_path'
     entry.linked_resource = '//metadata_host//temperature'
     return entry
+
+
+def get_test_cluster_entry():
+    """
+    This method creates a test Entry based on metadata
+    provided in test_data/test_metadata.json file
+    :return: test DC Entry
+    """
+    entry = datacatalog_v1beta1.types.Entry()
+    entry.user_specified_type = 'kafka_cluster'
+    entry.user_specified_system = 'kafka'
+    entry.display_name = 'Kafka cluster 1234'
+    entry.name = 'mocked_entry_path'
+    entry.linked_resource = '//metadata_host//1234'
+    return entry
