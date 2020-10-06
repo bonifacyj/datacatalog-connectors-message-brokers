@@ -1,5 +1,6 @@
 import mock
 from google.cloud import datacatalog_v1beta1
+from confluent_kafka.admin import ClusterMetadata, TopicMetadata, BrokerMetadata
 from google.datacatalog_connectors.kafka.prepare.\
     datacatalog_entry_factory import DataCatalogEntryFactory
 from google.datacatalog_connectors.kafka.datacatalog_cli import DatacatalogCli
@@ -16,15 +17,15 @@ class FakeDataCatalogEntryFactory(DataCatalogEntryFactory):
 class FakeKafkaConsumer(mock.MagicMock):
 
     def list_topics(self, timeout=-1):
-        raw_metadata = mock.MagicMock()
+        raw_metadata = ClusterMetadata()
         raw_metadata.topics = {
-            "testTopic0": mock.MagicMock(),
-            "testTopic1": mock.MagicMock()
+            "testTopic0": TopicMetadata(),
+            "testTopic1": TopicMetadata()
         }
         raw_metadata.cluster_id = "TestClusterID"
         raw_metadata.brokers = {
-            "testBroker0": mock.MagicMock(),
-            "testBroker1": mock.MagicMock()
+            "testBroker0": BrokerMetadata(),
+            "testBroker1": BrokerMetadata()
         }
         return raw_metadata
 
