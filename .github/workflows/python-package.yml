@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         build-dir: ['./google-datacatalog-kafka-connector']
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7]
     defaults:
       run:
         working-directory: ${{ matrix.build-dir }}
