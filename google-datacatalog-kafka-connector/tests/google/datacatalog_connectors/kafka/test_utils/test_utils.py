@@ -1,6 +1,7 @@
 import mock
 from google.cloud import datacatalog_v1beta1
-from confluent_kafka.admin import ClusterMetadata, TopicMetadata, BrokerMetadata
+from confluent_kafka.admin import ClusterMetadata, \
+    TopicMetadata, BrokerMetadata
 from google.datacatalog_connectors.kafka.prepare.\
     datacatalog_entry_factory import DataCatalogEntryFactory
 from google.datacatalog_connectors.kafka.datacatalog_cli import DatacatalogCli
