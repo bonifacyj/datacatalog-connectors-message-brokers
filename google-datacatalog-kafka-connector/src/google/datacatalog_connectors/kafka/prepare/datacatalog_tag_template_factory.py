@@ -16,11 +16,10 @@
 
 from google.cloud import datacatalog_v1beta1
 
+from google.datacatalog_connectors.kafka.config import TagTemplateConstants
+
 
 class DataCatalogTagTemplateFactory:
-
-    __DOUBLE_TYPE = datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE
-    __STRING_TYPE = datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING
 
     def __init__(self, project_id, location_id, entry_group_id):
         self.__project_id = project_id
@@ -33,33 +32,19 @@ class DataCatalogTagTemplateFactory:
         regarding cluster metadata
         :return: tag_template_id, tag_template
         """
-        tag_template = datacatalog_v1beta1.types.TagTemplate()
-        cluster_type = "cluster"
-        tag_template_id = '{}_{}_metadata'.format(self.__entry_group_id,
-                                                  cluster_type)
+        tag_template_id, tag_template = self._initialize_tag_template(
+            metadata_type="cluster")
 
-        tag_template.name = \
-            datacatalog_v1beta1.DataCatalogClient.tag_template_path(
-                project=self.__project_id,
-                location=self.__location_id,
-                tag_template=tag_template_id)
-
-        tag_template.display_name = '{} {} - Metadata'.format(
-            self.__entry_group_id.capitalize(), cluster_type.capitalize())
-
-        tag_template.fields[
-            'num_brokers'].type.primitive_type = self.__DOUBLE_TYPE
-        tag_template.fields['num_brokers'].display_name = 'Number of brokers'
-
-        tag_template.fields[
-            'num_topics'].type.primitive_type = self.__DOUBLE_TYPE
-        tag_template.fields['num_topics'].display_name = 'Number of topics'
-
-        tag_template.fields[
-            'bootstrap_address'].type.primitive_type = self.__STRING_TYPE
-        tag_template.fields[
-            'bootstrap_address'].display_name = 'Bootstrap address'
-        tag_template.fields['bootstrap_address'].is_required = True
+        fields = TagTemplateConstants.\
+            get_fields_dict_for_cluster_tag_templates()
+        for field_name, field_attributes in fields.items():
+            tag_template.fields[
+                field_name].type.primitive_type = field_attributes[
+                    TagTemplateConstants.FIELD_TYPE_IDX]
+            tag_template.fields[field_name].display_name = field_attributes[
+                TagTemplateConstants.DISPLAY_NAME_IDX]
+            tag_template.fields[field_name].is_required = field_attributes[
+                TagTemplateConstants.IS_REQUIRED_IDX]
 
         return tag_template_id, tag_template
 
@@ -69,10 +54,23 @@ class DataCatalogTagTemplateFactory:
         regarding topic metadata
         :return: tag_template_id, tag_template
         """
+        tag_template_id, tag_template = self._initialize_tag_template(
+            metadata_type="topic")
+
+        fields = TagTemplateConstants.get_fields_dict_for_topic_tag_templates()
+        for field_name, field_attributes in fields.items():
+            tag_template.fields[
+                field_name].type.primitive_type = field_attributes[
+                    TagTemplateConstants.FIELD_TYPE_IDX]
+            tag_template.fields[field_name].display_name = field_attributes[
+                TagTemplateConstants.DISPLAY_NAME_IDX]
+
+        return tag_template_id, tag_template
+
+    def _initialize_tag_template(self, metadata_type):
         tag_template = datacatalog_v1beta1.types.TagTemplate()
-        topic_type = "topic"
         tag_template_id = '{}_{}_metadata'.format(self.__entry_group_id,
-                                                  topic_type)
+                                                  metadata_type)
 
         tag_template.name = \
             datacatalog_v1beta1.DataCatalogClient.tag_template_path(
@@ -81,27 +79,5 @@ class DataCatalogTagTemplateFactory:
                 tag_template=tag_template_id)
 
         tag_template.display_name = '{} {} - Metadata'.format(
-            self.__entry_group_id.capitalize(), topic_type.capitalize())
-
-        tag_template.fields[
-            'num_partitions'].type.primitive_type = self.__DOUBLE_TYPE
-        tag_template.fields[
-            'num_partitions'].display_name = 'Number of partitions'
-
-        tag_template.fields[
-            'retention_policy'].type.primitive_type = self.__STRING_TYPE
-        tag_template.fields[
-            'retention_policy'].display_name = 'Retention policy'
-
-        tag_template.fields[
-            'cleanup_policy'].type.primitive_type = self.__STRING_TYPE
-        tag_template.fields['cleanup_policy'].display_name = 'Cleanup policy'
-
-        tag_template.fields[
-            'consumer_groups'].type.primitive_type = self.__STRING_TYPE
-        tag_template.fields['consumer_groups'].display_name = 'Consumer groups'
-
-        tag_template.fields['schema'].type.primitive_type = self.__STRING_TYPE
-        tag_template.fields['schema'].display_name = 'Schema'
-
+            self.__entry_group_id.capitalize(), metadata_type.capitalize())
         return tag_template_id, tag_template
