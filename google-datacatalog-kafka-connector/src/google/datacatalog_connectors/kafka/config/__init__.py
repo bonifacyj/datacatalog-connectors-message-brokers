@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .metadata_constants import MetadataDictKeys
+from .metadata_constants import MetadataConstants
 from .tag_templates_constants import TagTemplateConstants
 
-__all__ = ('MetadataDictKeys', 'TagTemplateConstants')
+__all__ = ('MetadataConstants', 'TagTemplateConstants')
