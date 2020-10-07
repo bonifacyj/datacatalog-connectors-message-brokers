@@ -82,5 +82,5 @@ def get_test_cluster_entry():
     entry.user_specified_system = 'kafka'
     entry.display_name = 'Kafka cluster 1234'
     entry.name = 'mocked_entry_path'
-    entry.linked_resource = '//metadata_host//123'
+    entry.linked_resource = '//metadata_host//1234'
     return entry
