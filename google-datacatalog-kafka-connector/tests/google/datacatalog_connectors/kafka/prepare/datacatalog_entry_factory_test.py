@@ -52,24 +52,13 @@ class DataCatalogEntryFactoryTestCase(unittest.TestCase):
         entry_id, entry = self.__entry_factory.make_entry_for_cluster(metadata)
         expected_entry = test_utils.get_test_cluster_entry()
         self.assertIsNotNone(entry_id)
-        self.assertEqual(entry, expected_entry)
+        self.assertEqual(entry,
+                         expected_entry,
+                         msg='Entry fields are not the same')
 
     def compare_entries(self, entry1, entry2, msg=None):
         if not msg:
             msg = ""
-        if entry1.user_specified_type != entry2.user_specified_type:
-            raise self.failureException('{}, {} != {}'.format(
-                msg, entry1.user_specified_type, entry2.user_specified_type))
-        if entry1.user_specified_system != entry2.user_specified_system:
-            raise self.failureException('{}, {} != {}'.format(
-                msg, entry1.user_specified_system,
-                entry2.user_specified_system))
-        if entry1.name != entry2.name:
-            raise self.failureException('{}, {} != {}'.format(
-                msg, entry1.name, entry2.name))
-        if entry1.linked_resource != entry2.linked_resource:
-            raise self.failureException('{}, {} != {}'.format(
-                msg, entry1.linked_resource, entry2.linked_resource))
-        if entry1.display_name != entry2.display_name:
-            raise self.failureException('{}, {} != {}'.format(
-                msg, entry1.display_name, entry2.display_name))
+        if str(entry1) != str(entry2):
+            raise self.failureException('{}: \n {} != {}'.format(
+                msg, str(entry1), str(entry2)))
