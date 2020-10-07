@@ -5,7 +5,7 @@ import mock
 from google.datacatalog_connectors.commons_test import utils
 from google.datacatalog_connectors.kafka import prepare
 from google.datacatalog_connectors.kafka.config.\
-    metadata_constants import MetadataDictKeys
+    metadata_constants import MetadataConstants
 from .. import test_utils
 
 
@@ -34,6 +34,6 @@ class AssembledEntryFactoryTestCase(unittest.TestCase):
                                                       'test_metadata.json')
         assembled_entries = self.__assembled_entry_factory.\
             make_entries_from_cluster_metadata(metadata)
-        num_topics = len(metadata[MetadataDictKeys.TOPICS])
+        num_topics = len(metadata[MetadataConstants.TOPICS])
         num_clusters = 1
         self.assertEqual(num_topics + num_clusters, len(assembled_entries))

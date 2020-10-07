@@ -18,7 +18,7 @@ import logging
 
 from google.datacatalog_connectors.commons import prepare
 from google.datacatalog_connectors.kafka.config.\
-    metadata_constants import MetadataDictKeys
+    metadata_constants import MetadataConstants
 
 
 class AssembledEntryFactory:
@@ -39,7 +39,7 @@ class AssembledEntryFactory:
         assembled_cluster = self.__make_assembled_entry_for_cluster(metadata)
         assembled_entries.append(assembled_cluster)
 
-        topics = metadata[MetadataDictKeys.TOPICS]
+        topics = metadata[MetadataConstants.TOPICS]
         for topic in topics:
             assembled_topic = self.__make_assembled_entry_for_topic(topic)
             assembled_entries.append(assembled_topic)

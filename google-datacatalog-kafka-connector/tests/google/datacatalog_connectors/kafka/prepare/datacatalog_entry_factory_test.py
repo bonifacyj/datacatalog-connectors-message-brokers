@@ -8,7 +8,7 @@ from google.datacatalog_connectors.commons_test import utils
 from google.datacatalog_connectors.kafka.prepare.\
     datacatalog_entry_factory import DataCatalogEntryFactory
 from google.datacatalog_connectors.kafka.config.\
-    metadata_constants import MetadataDictKeys
+    metadata_constants import MetadataConstants
 from .. import test_utils
 
 
@@ -35,7 +35,7 @@ class DataCatalogEntryFactoryTestCase(unittest.TestCase):
 
         metadata = utils.Utils.convert_json_to_object(
             self.__MODULE_PATH, 'test_metadata_one_topic.json')
-        topics = metadata[MetadataDictKeys.TOPICS]
+        topics = metadata[MetadataConstants.TOPICS]
 
         for topic in topics:
             entry_id, entry = self.__entry_factory.make_entry_for_topic(topic)

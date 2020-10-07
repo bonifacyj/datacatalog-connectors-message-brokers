@@ -1,6 +1,6 @@
 import logging
 from google.datacatalog_connectors.kafka.config.\
-    metadata_constants import MetadataDictKeys
+    metadata_constants import MetadataConstants
 
 
 class MetadataScraper:
@@ -24,14 +24,14 @@ class MetadataScraper:
 
     def _get_topic_metadata(self, metadata_object):
         topic_names = metadata_object.topics.keys()
-        topic_metadata = {MetadataDictKeys.TOPICS: topic_names}
+        topic_metadata = {MetadataConstants.TOPICS: topic_names}
         return topic_metadata
 
     def _get_cluster_metadata(self, metadata_object):
         cluster_id = metadata_object.cluster_id
         num_brokers = len(metadata_object.brokers)
         cluster_metadata = {
-            MetadataDictKeys.CLUSTER_ID: cluster_id,
-            MetadataDictKeys.BROKERS_NUM: num_brokers
+            MetadataConstants.CLUSTER_ID: cluster_id,
+            MetadataConstants.BROKERS_NUM: num_brokers
         }
         return cluster_metadata

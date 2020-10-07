@@ -3,7 +3,7 @@ from google.datacatalog_connectors.commons.prepare.base_entry_factory import \
     BaseEntryFactory
 
 from google.datacatalog_connectors.kafka.config.\
-    metadata_constants import MetadataDictKeys
+    metadata_constants import MetadataConstants
 
 
 class DataCatalogEntryFactory(BaseEntryFactory):
@@ -45,7 +45,7 @@ class DataCatalogEntryFactory(BaseEntryFactory):
         :param metadata: dict
         :return: entry_id, entry
         """
-        cluster_id = metadata[MetadataDictKeys.CLUSTER_ID]
+        cluster_id = metadata[MetadataConstants.CLUSTER_ID]
         entry_id = self._format_id(cluster_id)
         entry = datacatalog_v1beta1.types.Entry()
 
