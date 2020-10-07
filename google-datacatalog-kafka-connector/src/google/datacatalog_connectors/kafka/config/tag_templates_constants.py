@@ -38,8 +38,17 @@ class TagTemplateConstants:
             'num_partitions':
                 ('Number of partitions',
                  datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE),
-            'retention_policy':
-                ('Retention policy',
+            'retention_time':
+                ('Retention time',
+                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING),
+            'retention_space':
+                ('Max retention space',
+                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE),
+            'min_compaction_lag':
+                ('Min compaction lag',
+                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING),
+            'max_compaction_lag':
+                ('Max compaction lag',
                  datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING),
             'cleanup_policy':
                 ('Cleanup policy',
