@@ -1,5 +1,37 @@
 {
   "cluster_id" : "1234",
+  "bootstrap_address": "12.13.14",
   "brokers_num": 3,
-  "topics": ["temperature", "humidity", "incoming_calls", "guests"]
+  "topics": [
+
+    {
+      "name": "temperature",
+      "num_partitions": 3,
+      "retention_time": "172800000 ms",
+      "retention_space": "12 MB",
+      "min_compaction_lag": "200 ms",
+      "max_compaction_lag": "9223372036854775807 ms",
+      "cleanup_policy": "delete, compact"
+    },
+    {
+      "name": "humidity",
+      "num_partitions": 1,
+      "retention_time": "172800000 ms",
+      "cleanup_policy": "delete"
+    },
+    {
+      "name": "incoming_calls",
+      "num_partitions": 15,
+      "retention_time": "172800000 ms",
+      "retention_space": "12 MB",
+      "cleanup_policy": "delete"
+    },
+    {
+      "name": "guests",
+      "num_partitions": 3,
+      "min_compaction_lag": "200 ms",
+      "max_compaction_lag": "9223372036854775807 ms",
+      "cleanup_policy": "compact"
+    }
+    ]
 }
