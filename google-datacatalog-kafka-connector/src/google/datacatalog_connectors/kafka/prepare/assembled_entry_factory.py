@@ -26,7 +26,7 @@ class AssembledEntryFactory:
     def __init__(self,
                  entry_group_id,
                  datacatalog_entry_factory,
-                 datacatalog_tag_factory=None,
+                 datacatalog_tag_factory,
                  tag_templates_dict=None):
         self.__datacatalog_entry_factory = datacatalog_entry_factory
         self.__datacatalog_tag_factory = datacatalog_tag_factory
@@ -47,12 +47,28 @@ class AssembledEntryFactory:
 
         return assembled_entries
 
-    def __make_assembled_entry_for_topic(self, topic):
+    def __make_assembled_entry_for_topic(self, topic_metadata):
         entry_id, entry = self.__datacatalog_entry_factory.\
-            make_entry_for_topic(topic)
-        return prepare.AssembledEntryData(entry_id, entry)
+            make_entry_for_topic(topic_metadata)
+        tags = []
+        if self.__tag_templates_dict:
+            tag_template_id = '{}_{}_metadata'.format(self.__entry_group_id,
+                                                      'topic')
+            tag_template = self.__tag_templates_dict[tag_template_id]
+            tags.append(
+                self.__datacatalog_tag_factory.make_tag_for_topic(
+                    tag_template, topic_metadata))
+        return prepare.AssembledEntryData(entry_id, entry, tags)
 
     def __make_assembled_entry_for_cluster(self, metadata):
         entry_id, entry = self.__datacatalog_entry_factory.\
             make_entry_for_cluster(metadata)
-        return prepare.AssembledEntryData(entry_id, entry)
+        tags = []
+        if self.__tag_templates_dict:
+            tag_template_id = '{}_{}_metadata'.format(self.__entry_group_id,
+                                                      'cluster')
+            tag_template = self.__tag_templates_dict[tag_template_id]
+            tags.append(
+                self.__datacatalog_tag_factory.make_tag_for_cluster(
+                    tag_template, metadata))
+        return prepare.AssembledEntryData(entry_id, entry, tags)
