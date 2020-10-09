@@ -67,7 +67,7 @@ virtualenv --python python3.6 <your-env>
 
 ## 2. Install from source
 
-### 2.1. Get the code
+### 2.1. Get the code from the repository
 
 ````bash
 TBA
