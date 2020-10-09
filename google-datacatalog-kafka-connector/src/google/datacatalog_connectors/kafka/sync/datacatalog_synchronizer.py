@@ -1,6 +1,8 @@
 import logging
 import uuid
 
+from confluent_kafka import Consumer
+
 from google.datacatalog_connectors.commons.cleanup \
     import datacatalog_metadata_cleaner
 from google.datacatalog_connectors.commons.ingest \
@@ -19,14 +21,12 @@ class DataCatalogSynchronizer:
                  entry_group_id,
                  kafka_host,
                  metadata_scraper,
-                 consumer,
                  enable_monitoring=None):
         self.__entry_group_id = entry_group_id
         self.__metadata_scraper = metadata_scraper
         self.__project_id = project_id
         self.__location_id = location_id
         self.__kafka_host = kafka_host
-        self.__consumer = consumer
         self.__task_id = uuid.uuid4().hex[:8]
         self.__metrics_processor = metrics_processor.MetricsProcessor(
             project_id, location_id, entry_group_id, enable_monitoring,
@@ -39,7 +39,8 @@ class DataCatalogSynchronizer:
         self._before_run()
         logging.info('\n\n==============Scrape metadata===============')
 
-        metadata = self.__metadata_scraper(self.__consumer).get_metadata()
+        consumer = self._create_consumer()
+        metadata = self.__metadata_scraper(consumer).get_metadata()
 
         self._log_metadata(metadata)
 
@@ -60,6 +61,14 @@ class DataCatalogSynchronizer:
         self._after_run()
 
         return self.__task_id
+
+    def _create_consumer(self):
+        connection_config = {
+            'bootstrap.servers': self.__kafka_host,
+            'group.id': 'kafka2dc'
+        }
+        consumer = Consumer(connection_config)
+        return consumer
 
     def __prepare_datacatalog_entries(self, metadata):
         entry_factory = self.__create_assembled_entry_factory()

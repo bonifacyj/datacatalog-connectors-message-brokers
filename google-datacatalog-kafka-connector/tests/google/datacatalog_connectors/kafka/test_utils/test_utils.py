@@ -33,7 +33,7 @@ class FakeKafkaConsumer(mock.MagicMock):
 
 class FakeDataCatalogCLI(DatacatalogCli):
 
-    def _get_kafka_consumer(self, args):
+    def _get_connection_config(self, args):
         return FakeKafkaConsumer()
 
     def _parse_args(self, argv):

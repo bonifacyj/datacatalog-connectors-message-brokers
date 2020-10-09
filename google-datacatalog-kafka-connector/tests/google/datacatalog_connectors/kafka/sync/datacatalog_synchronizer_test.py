@@ -85,7 +85,6 @@ class DatacatalogSynchronizerTestCase(unittest.TestCase):
             DatacatalogSynchronizerTestCase.__ENTRY_GROUP_ID,
             DatacatalogSynchronizerTestCase.__HOST,
             MetadataScraper,
-            test_utils.FakeKafkaConsumer,
             enable_monitoring=True)
 
         synchronizer.run()
