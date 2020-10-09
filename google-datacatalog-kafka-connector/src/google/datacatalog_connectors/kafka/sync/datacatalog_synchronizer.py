@@ -20,6 +20,7 @@ class DataCatalogSynchronizer:
                  location_id,
                  entry_group_id,
                  kafka_host,
+                 connection_config,
                  metadata_scraper,
                  enable_monitoring=None):
         self.__entry_group_id = entry_group_id
@@ -27,6 +28,7 @@ class DataCatalogSynchronizer:
         self.__project_id = project_id
         self.__location_id = location_id
         self.__kafka_host = kafka_host
+        self.__connection_config = connection_config
         self.__task_id = uuid.uuid4().hex[:8]
         self.__metrics_processor = metrics_processor.MetricsProcessor(
             project_id, location_id, entry_group_id, enable_monitoring,
