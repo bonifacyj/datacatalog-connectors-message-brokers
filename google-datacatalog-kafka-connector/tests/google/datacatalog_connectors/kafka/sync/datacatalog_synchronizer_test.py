@@ -17,9 +17,10 @@
 import os
 import unittest
 
-from .. import test_utils
 from google.datacatalog_connectors.kafka.sync import \
     datacatalog_synchronizer
+from google.datacatalog_connectors.kafka.scrape.\
+    metadata_scraper import MetadataScraper
 import mock
 
 
@@ -73,15 +74,21 @@ class DatacatalogSynchronizerTestCase(unittest.TestCase):
             process_metadata_payload_bytes_metric, process_elapsed_time_metric,
             delete_obsolete_metadata, ingest_metadata,
             make_entries_from_cluster_metadata, get_metadata):
+        # Test that all synchronizer calls go through and it doesn't
+        # break in the middle
         make_entries_from_cluster_metadata.return_value = [{}]
+        connection_config = {
+            'bootstrap.servers': DatacatalogSynchronizerTestCase.__HOST,
+            'group.id': 'test_group'
+        }
 
         synchronizer = datacatalog_synchronizer.DataCatalogSynchronizer(
             DatacatalogSynchronizerTestCase.__PROJECT_ID,
             DatacatalogSynchronizerTestCase.__LOCATION_ID,
             DatacatalogSynchronizerTestCase.__ENTRY_GROUP_ID,
             DatacatalogSynchronizerTestCase.__HOST,
-            test_utils.FakeMetadataScraper,
-            {'bootstrap.servers': 'test_address'},
+            connection_config,
+            MetadataScraper,
             enable_monitoring=True)
 
         synchronizer.run()

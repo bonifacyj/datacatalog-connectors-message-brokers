@@ -14,8 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import unittest
+
+from confluent_kafka import Consumer
 
 from .. import test_utils
 from google.datacatalog_connectors.kafka.scrape.\
@@ -23,17 +24,15 @@ from google.datacatalog_connectors.kafka.scrape.\
 
 
 class MetadataScraperTestCase(unittest.TestCase):
-    __MODULE_PATH = os.path.dirname(os.path.abspath(__file__))
-    __SCRAPE_PACKAGE = 'google.datacatalog_connectors.kafka.scrape'
 
     def test_scrape_metadata_with_credentials_should_return_objects(self):
-        scraper = test_utils.FakeMetadataScraper()
-        metadata = scraper.get_metadata(
-            connection_args={'bootstrap.servers': 'fake_host'})
-        self.assertEqual(1, len(metadata))
+        kafka_consumer = test_utils.FakeKafkaConsumer()
+        scraper = MetadataScraper(kafka_consumer)
+        metadata = scraper.get_metadata()
+        self.assertGreater(len(metadata), 0)
 
     def test_scrape_metadata_on_connection_exception_should_re_raise(self):
-        scraper = MetadataScraper()
-        self.assertRaises(Exception,
-                          scraper.get_metadata,
-                          connection_args={'bootstrap.servers': 'fake_host'})
+        test_config = {'bootstrap.servers': 'fake_host', 'group.id': 'test_id'}
+        consumer = Consumer(test_config)
+        scraper = MetadataScraper(consumer)
+        self.assertRaises(Exception, scraper.get_metadata)

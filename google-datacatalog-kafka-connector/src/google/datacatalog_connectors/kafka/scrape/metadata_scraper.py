@@ -1,33 +1,37 @@
 import logging
-from confluent_kafka import Consumer
+from google.datacatalog_connectors.kafka.config.\
+    metadata_constants import MetadataConstants
 
 
 class MetadataScraper:
 
-    def __init__(self):
-        pass
+    def __init__(self, consumer):
+        self._consumer = consumer
 
-    def get_metadata(self, connection_args):
-        metadata = self._get_metadata_from_message_broker_connection(
-            connection_args)
-        metadata = self._create_metadata_dict(metadata)
-        return metadata
-
-    def _get_metadata_from_message_broker_connection(self, connection_args):
-        consumer = None
+    def get_metadata(self):
         try:
-            consumer = Consumer(connection_args)
-            cluster_metadata = consumer.list_topics()
-            topic_names = cluster_metadata.topics.keys()
-            return topic_names
-        except:  # noqa:E722
+            raw_metadata = self._consumer.list_topics(timeout=20)
+            topic_metadata = self._get_topic_metadata(raw_metadata)
+            cluster_metadata = self._get_cluster_metadata(raw_metadata)
+            cluster_metadata.update(topic_metadata)
+            return cluster_metadata
+        except:  # noqa:E722 silence linter complaint about bare except
             logging.error(
                 'Error connecting to the system to extract metadata.')
             raise
         finally:
-            if consumer:
-                consumer.close()
+            self._consumer.close()
 
-    def _create_metadata_dict(self, metadata):
-        dict_metadata = {'topics': metadata}
-        return dict_metadata
+    def _get_topic_metadata(self, metadata_object):
+        topic_names = metadata_object.topics.keys()
+        topic_metadata = {MetadataConstants.TOPICS: topic_names}
+        return topic_metadata
+
+    def _get_cluster_metadata(self, metadata_object):
+        cluster_id = metadata_object.cluster_id
+        num_brokers = len(metadata_object.brokers)
+        cluster_metadata = {
+            MetadataConstants.CLUSTER_ID: cluster_id,
+            MetadataConstants.BROKERS_NUM: num_brokers
+        }
+        return cluster_metadata
