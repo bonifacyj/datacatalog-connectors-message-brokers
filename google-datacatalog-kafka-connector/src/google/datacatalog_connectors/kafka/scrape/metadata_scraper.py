@@ -31,7 +31,7 @@ class MetadataScraper:
         num_brokers = len(metadata_object.brokers)
         cluster_metadata = {
             MetadataConstants.CLUSTER_ID: cluster_id,
-            MetadataConstants.BROKERS_NUM: num_brokers,
+            MetadataConstants.NUM_BROKERS: num_brokers,
             MetadataConstants.BOOTSTRAP_SERVER: self._bootstrap_server
         }
         return cluster_metadata

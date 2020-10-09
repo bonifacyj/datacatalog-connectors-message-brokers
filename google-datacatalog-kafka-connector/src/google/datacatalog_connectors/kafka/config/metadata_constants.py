@@ -1,7 +1,7 @@
 class MetadataConstants:
     CLUSTER_ID = "cluster_id"
     TOPICS = "topics"
-    BROKERS_NUM = "brokers_num"
+    NUM_BROKERS = "num_brokers"
     NUM_PARTITIONS = "num_partitions"
     CLEANUP_POLICY = "cleanup_policy"
     TOPIC_NAME = "name"
