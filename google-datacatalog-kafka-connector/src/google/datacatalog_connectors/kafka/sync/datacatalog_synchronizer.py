@@ -1,7 +1,7 @@
 import logging
 import uuid
 
-from confluent_kafka import Consumer
+from confluent_kafka.admin import AdminClient
 
 from google.datacatalog_connectors.commons.cleanup \
     import datacatalog_metadata_cleaner
@@ -39,8 +39,9 @@ class DataCatalogSynchronizer:
         self._before_run()
         logging.info('\n\n==============Scrape metadata===============')
 
-        consumer = self._create_consumer()
-        metadata = self.__metadata_scraper(consumer).get_metadata()
+        client = self._create_client()
+        metadata = self.__metadata_scraper(client,
+                                           self.__kafka_host).get_metadata()
 
         self._log_metadata(metadata)
 
@@ -63,13 +64,10 @@ class DataCatalogSynchronizer:
 
         return self.__task_id
 
-    def _create_consumer(self):
-        connection_config = {
-            'bootstrap.servers': self.__kafka_host,
-            'group.id': 'kafka2dc'
-        }
-        consumer = Consumer(connection_config)
-        return consumer
+    def _create_client(self):
+        connection_config = {'bootstrap.servers': self.__kafka_host}
+        client = AdminClient(connection_config)
+        return client
 
     def __prepare_datacatalog_entries(self, metadata):
         entry_factory = self.__create_assembled_entry_factory()

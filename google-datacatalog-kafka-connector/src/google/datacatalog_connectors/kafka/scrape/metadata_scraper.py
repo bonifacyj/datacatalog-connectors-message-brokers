@@ -10,28 +10,35 @@ from confluent_kafka.admin import ConfigResource
 
 class MetadataScraper:
 
-    def __init__(self, consumer):
-        self._adminClient = consumer
+    def __init__(self, client, bootstrap_server):
+        self._adminClient = client
+        self._bootstrap_server = bootstrap_server
 
     def get_metadata(self):
         try:
             raw_metadata = self._adminClient.list_topics(timeout=20)
-            topic_metadata = self._get_topic_metadata(raw_metadata)
+            topics_metadata = self._get_topics_metadata(raw_metadata)
             cluster_metadata = self._get_cluster_metadata(raw_metadata)
-            cluster_metadata.update(topic_metadata)
+            cluster_metadata.update(topics_metadata)
             return cluster_metadata
         except:  # noqa:E722 silence linter complaint about bare except
             logging.error(
                 'Error connecting to the system to extract metadata.')
             raise
 
-    def _get_topic_metadata(self, metadata_object):
-        topic_names = metadata_object.topics.keys()
-        topic_metadata = {MetadataConstants.TOPICS: topic_names}
-        return topic_metadata
+    def _get_cluster_metadata(self, metadata_object):
+        cluster_id = metadata_object.cluster_id
+        num_brokers = len(metadata_object.brokers)
+        cluster_metadata = {
+            MetadataConstants.CLUSTER_ID: cluster_id,
+            MetadataConstants.BROKERS_NUM: num_brokers,
+            MetadataConstants.BOOTSTRAP_SERVER: self._bootstrap_server
+        }
+        return cluster_metadata
 
-    def _get_topic_config(self, topic_names, raw_metadata):
-        topics_metadata = list()
+    def _get_topics_metadata(self, metadata_object):
+        topic_names = metadata_object.topics.keys()
+        descriptions = list()
         config_resources = [
             ConfigResource(confluent_kafka.admin.RESOURCE_TOPIC, topic_name)
             for topic_name in topic_names
@@ -40,45 +47,51 @@ class MetadataScraper:
                                                             request_timeout=10)
         for topic, future in config_futures.items():
             try:
-                topic_description = dict()
                 config = future.result()
-                topic_description["name"] = topic.name
-                num_partitions = len(
-                    raw_metadata.topics[topic.name].partitions)
-                topic_description["num_partitions"] = num_partitions
-                cleanup_policy = config['cleanup.policy'].value
-                if 'delete' in cleanup_policy:
-                    topic_description.update(
-                        self._set_retention_space_time(config))
-                if 'compact' in cleanup_policy:
-                    topic_description.update(self._set_compaction_lag(config))
-                topics_metadata.append(topic_description)
+                topic_description = self._assemble_topic_metadata(
+                    topic.name, metadata_object, config)
+                descriptions.append(topic_description)
             except KafkaException as e:
-                print("Failed to describe topic {}: {}".format(topic, e))
-            except Exception as e:
+                logging.error("Failed to describe topic {}: {}".format(
+                    topic, e))
                 raise
-        return topics_metadata
+        topic_metadata = {MetadataConstants.TOPICS: descriptions}
+        return topic_metadata
 
-    def _get_cluster_metadata(self, metadata_object):
-        cluster_id = metadata_object.cluster_id
-        num_brokers = len(metadata_object.brokers)
-        cluster_metadata = {
-            MetadataConstants.CLUSTER_ID: cluster_id,
-            MetadataConstants.BROKERS_NUM: num_brokers
+    def _assemble_topic_metadata(self, topic_name, raw_metadata, config_desc):
+        num_partitions = len(raw_metadata.topics[topic_name].partitions)
+        cleanup_policy = config_desc['cleanup.policy'].value
+
+        topic_description = {
+            MetadataConstants.TOPIC_NAME: topic_name,
+            MetadataConstants.NUM_PARTITIONS: num_partitions,
+            MetadataConstants.CLEANUP_POLICY: cleanup_policy
         }
-        return cluster_metadata
 
-    def _set_retention_space_time(self, config):
+        if 'delete' in cleanup_policy:
+            topic_description.update(
+                self._get_topic_retention_config(config_desc))
+        if 'compact' in cleanup_policy:
+            topic_description.update(
+                self._get_topic_compaction_config(config_desc))
+        return topic_description
+
+    def _get_topic_retention_config(self, config):
         # todo: make time and space info understandable for humans
         retention_time = config['retention.ms'].value
-        topic_retention_config = {'retention_time': retention_time}
+        topic_retention_config = {
+            MetadataConstants.RETENTION_TIME: retention_time
+        }
         retention_space = config['retention.bytes'].value
-        if retention_space != '-1':  # '-1' is a default value, if space retention is not set
-            topic_retention_config['retention_space'] = retention_space
+        if retention_space != '-1':
+            # '-1' means space retention parameter is not set in kafka,
+            # therefore we ignore it
+            topic_retention_config[
+                MetadataConstants.RETENTION_SPACE] = retention_space
         return topic_retention_config
 
-    def _set_compaction_lag(self, config):
-        #todo: make time info understandable for humans
+    def _get_topic_compaction_config(self, config):
+        # todo: make time info understandable for humans
         min_compaction_lag = config['min.compaction.lag.ms'].value
         max_compaction_lag = config['max.compaction.lag.ms'].value
         topic_compaction_config = {
