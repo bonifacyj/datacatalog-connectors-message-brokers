@@ -15,7 +15,7 @@ class DataCatalogTagFactory:
         tag.fields['bootstrap_address'].string_value = cluster_metadata[
             MetadataConstants.BOOTSTRAP_SERVER]
         num_topics = len(cluster_metadata[MetadataConstants.TOPICS])
-        tag.fields['num_topics'] = num_topics
+        tag.fields['num_topics'].double_value = num_topics
         return tag
 
     def make_tag_for_topic(self, tag_template, topic_metadata):
@@ -30,13 +30,13 @@ class DataCatalogTagFactory:
             tag.fields['retention_time'].string_value = retention_time
         retention_space = topic_metadata.get(MetadataConstants.RETENTION_SPACE)
         if retention_space:
-            tag.fields['retention_space'] = retention_space
+            tag.fields['retention_space'].double_value = retention_space
         min_compaction_lag = topic_metadata.get(
             MetadataConstants.MIN_COMPACTION_LAG)
         if min_compaction_lag:
-            tag.fields['min_compaction_lag'] = min_compaction_lag
+            tag.fields['min_compaction_lag'].string_value = min_compaction_lag
         max_compaction_lag = topic_metadata.get(
             MetadataConstants.MAX_COMPACTION_LAG)
         if max_compaction_lag:
-            tag.fields['max_compaction_lag'] = max_compaction_lag
+            tag.fields['max_compaction_lag'].string_value = max_compaction_lag
         return tag
