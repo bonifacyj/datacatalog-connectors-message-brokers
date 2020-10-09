@@ -17,7 +17,6 @@
 import os
 import unittest
 
-from .. import test_utils
 from google.datacatalog_connectors.kafka.sync import \
     datacatalog_synchronizer
 from google.datacatalog_connectors.kafka.scrape.\
