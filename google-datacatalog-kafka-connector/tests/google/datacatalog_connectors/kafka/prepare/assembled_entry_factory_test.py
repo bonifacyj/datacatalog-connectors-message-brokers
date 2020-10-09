@@ -4,6 +4,8 @@ import mock
 
 from google.datacatalog_connectors.commons_test import utils
 from google.datacatalog_connectors.kafka import prepare
+from google.datacatalog_connectors.kafka.config.\
+    metadata_constants import MetadataConstants
 from .. import test_utils
 
 
@@ -13,10 +15,7 @@ class AssembledEntryFactoryTestCase(unittest.TestCase):
     __LOCATION_ID = 'location_id'
     __ENTRY_GROUP_ID = 'kafka'
     __MOCKED_ENTRY_PATH = 'mocked_entry_path'
-
     __METADATA_SERVER_HOST = 'metadata_host'
-    __PREPARE_PACKAGE = 'google.datacatalog_connectors.kafka.prepare'
-
     __MODULE_PATH = os.path.dirname(os.path.abspath(__file__))
 
     def setUp(self):
@@ -35,5 +34,6 @@ class AssembledEntryFactoryTestCase(unittest.TestCase):
                                                       'test_metadata.json')
         assembled_entries = self.__assembled_entry_factory.\
             make_entries_from_cluster_metadata(metadata)
-        topics = metadata["topics"]
-        self.assertEqual(len(topics), len(assembled_entries))
+        num_topics = len(metadata[MetadataConstants.TOPICS])
+        num_clusters = 1
+        self.assertEqual(num_topics + num_clusters, len(assembled_entries))

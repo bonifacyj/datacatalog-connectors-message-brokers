@@ -15,7 +15,7 @@
 # limitations under the License.
 
 import unittest
-
+from google.datacatalog_connectors.kafka.datacatalog_cli import DatacatalogCli
 from . import test_utils
 import mock
 
@@ -25,9 +25,12 @@ import mock
             lambda self, **kargs: None)
 class DatacatalogCLITestCase(unittest.TestCase):
 
+    @mock.patch('argparse.ArgumentParser.parse_args')
     @mock.patch('google.datacatalog_connectors.kafka.sync.'
                 'datacatalog_synchronizer.DataCatalogSynchronizer.run')
-    def test_datacatalog_cli_run_should_not_raise_error(self, run):
-        cli = test_utils.FakeDataCatalogCLI()
+    def test_datacatalog_cli_run_should_not_raise_error(self, run, parse_args):
+
+        parse_args.return_value = test_utils.mock_parse_args()
+        cli = DatacatalogCli()
         cli.run({})
         self.assertEqual(run.call_count, 1)

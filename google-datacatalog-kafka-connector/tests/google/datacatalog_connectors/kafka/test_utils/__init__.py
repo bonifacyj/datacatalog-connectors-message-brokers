@@ -15,7 +15,9 @@
 # limitations under the License.
 
 from .test_utils import FakeDataCatalogEntryFactory,\
-    FakeMetadataScraper, FakeDataCatalogCLI
+    FakeKafkaConsumer,\
+    get_test_topic_entry, get_test_cluster_entry,\
+    mock_parse_args
 
-__all__ = ('FakeDataCatalogEntryFactory', 'FakeMetadataScraper',
-           'FakeDataCatalogCLI')
+__all__ = ('FakeDataCatalogEntryFactory', 'FakeKafkaConsumer',
+           'get_test_topic_entry', 'get_test_cluster_entry', 'mock_parse_args')
