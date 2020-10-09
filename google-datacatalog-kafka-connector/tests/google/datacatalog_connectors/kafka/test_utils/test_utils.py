@@ -37,6 +37,7 @@ def mock_parse_args():
     args.datacatalog_entry_group_id = "kafka"
     args.kafka_host = "test_address"
     args.service_account_path = "path_to_service_account"
+    args.group_id = 'test_id'
     args.enable_monitoring = True
     return args
 

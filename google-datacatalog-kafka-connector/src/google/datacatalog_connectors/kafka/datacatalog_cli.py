@@ -42,6 +42,7 @@ class DatacatalogCli():
             location_id=args.datacatalog_location_id,
             entry_group_id=self._get_entry_group_id(args),
             kafka_host=self._get_host_arg(args),
+            connection_config=self._get_connection_config(args),
             metadata_scraper=self._get_metadata_scraper(),
             enable_monitoring=args.enable_monitoring).run()
 
@@ -53,6 +54,10 @@ class DatacatalogCli():
 
     def _get_host_arg(self, args):
         return args.kafka_host
+
+    def _get_connection_config(self, args):
+        group_id = args.group_id or 'kafka2dc'
+        return {'bootstrap.servers': args.kafka_host, 'group.id': group_id}
 
     def _get_entry_group_id(self, args):
         return args.datacatalog_entry_group_id or 'kafka'
@@ -75,7 +80,8 @@ class DatacatalogCli():
         parser.add_argument('--kafka-host',
                             help='Your kafka server host',
                             required=True)
-
+        parser.add_argument('--group-id',
+                            help='Group.id parameter for a Kafka consumer')
         parser.add_argument('--service-account-path',
                             help='Local Service Account path '
                             '(Can be suplied as '
