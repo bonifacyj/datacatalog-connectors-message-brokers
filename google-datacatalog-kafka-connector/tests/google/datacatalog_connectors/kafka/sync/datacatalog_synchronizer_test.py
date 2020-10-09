@@ -17,7 +17,6 @@
 import os
 import unittest
 
-from .. import test_utils
 from google.datacatalog_connectors.kafka.sync import \
     datacatalog_synchronizer
 from google.datacatalog_connectors.kafka.scrape.\
@@ -85,7 +84,6 @@ class DatacatalogSynchronizerTestCase(unittest.TestCase):
             DatacatalogSynchronizerTestCase.__ENTRY_GROUP_ID,
             DatacatalogSynchronizerTestCase.__HOST,
             MetadataScraper,
-            test_utils.FakeKafkaConsumer,
             enable_monitoring=True)
 
         synchronizer.run()

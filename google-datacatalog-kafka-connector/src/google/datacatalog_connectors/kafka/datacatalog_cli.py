@@ -19,8 +19,6 @@ import logging
 import os
 import sys
 
-from confluent_kafka import Consumer
-
 from google.datacatalog_connectors.kafka.scrape import metadata_scraper
 from google.datacatalog_connectors.kafka.sync import \
     datacatalog_synchronizer
@@ -45,7 +43,6 @@ class DatacatalogCli():
             entry_group_id=self._get_entry_group_id(args),
             kafka_host=self._get_host_arg(args),
             metadata_scraper=self._get_metadata_scraper(),
-            consumer=self._get_kafka_consumer(args),
             enable_monitoring=args.enable_monitoring).run()
 
     def _get_datacatalog_synchronizer(self):
@@ -87,11 +84,6 @@ class DatacatalogCli():
         parser.add_argument('--enable-monitoring',
                             help='Enables monitoring metrics on the connector')
         return parser.parse_args(argv)
-
-    def _get_kafka_consumer(self, args):
-        config = {'bootstrap.servers': args.kafka_host, 'group.id': 'kafka2dc'}
-        kafka_consumer = Consumer(config)
-        return kafka_consumer
 
 
 def main():
