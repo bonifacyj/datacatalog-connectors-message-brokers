@@ -4,7 +4,6 @@ from confluent_kafka.admin import ClusterMetadata, \
     TopicMetadata, BrokerMetadata
 from google.datacatalog_connectors.kafka.prepare.\
     datacatalog_entry_factory import DataCatalogEntryFactory
-from google.datacatalog_connectors.kafka.datacatalog_cli import DatacatalogCli
 
 
 class FakeDataCatalogEntryFactory(DataCatalogEntryFactory):
@@ -31,20 +30,15 @@ class FakeKafkaConsumer(mock.MagicMock):
         return raw_metadata
 
 
-class FakeDataCatalogCLI(DatacatalogCli):
-
-    def _get_kafka_consumer(self, args):
-        return FakeKafkaConsumer()
-
-    def _parse_args(self, argv):
-        args = MockedObject()
-        args.datacatalog_project_id = "project_id"
-        args.datacatalog_location_id = "location_id"
-        args.datacatalog_entry_group_id = "kafka"
-        args.kafka_host = "test_address"
-        args.service_account_path = "path_to_service_account"
-        args.enable_monitoring = True
-        return args
+def mock_parse_args():
+    args = MockedObject()
+    args.datacatalog_project_id = "project_id"
+    args.datacatalog_location_id = "location_id"
+    args.datacatalog_entry_group_id = "kafka"
+    args.kafka_host = "test_address"
+    args.service_account_path = "path_to_service_account"
+    args.enable_monitoring = True
+    return args
 
 
 class MockedObject(object):
