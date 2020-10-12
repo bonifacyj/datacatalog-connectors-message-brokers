@@ -25,14 +25,16 @@ from google.datacatalog_connectors.kafka.scrape.\
 
 class MetadataScraperTestCase(unittest.TestCase):
 
+    __HOST = 'fake_host'
+
     def test_scrape_metadata_with_credentials_should_return_objects(self):
         kafka_consumer = test_utils.FakeKafkaConsumer()
-        scraper = MetadataScraper(kafka_consumer)
+        scraper = MetadataScraper(kafka_consumer, self.__HOST)
         metadata = scraper.get_metadata()
         self.assertGreater(len(metadata), 0)
 
     def test_scrape_metadata_on_connection_exception_should_re_raise(self):
-        test_config = {'bootstrap.servers': 'fake_host', 'group.id': 'test_id'}
+        test_config = {'bootstrap.servers': self.__HOST, 'group.id': 'test_id'}
         consumer = Consumer(test_config)
-        scraper = MetadataScraper(consumer)
+        scraper = MetadataScraper(consumer, self.__HOST)
         self.assertRaises(Exception, scraper.get_metadata)
