@@ -86,8 +86,8 @@ class MetadataScraper:
         if retention_space != '-1':
             # '-1' means space retention parameter is not set in kafka,
             # therefore we ignore it
-            topic_retention_config[
-                MetadataConstants.RETENTION_SPACE] = retention_space
+            topic_retention_config[MetadataConstants.RETENTION_SPACE] = int(
+                retention_space)
         return topic_retention_config
 
     def _get_topic_compaction_config(self, config):
