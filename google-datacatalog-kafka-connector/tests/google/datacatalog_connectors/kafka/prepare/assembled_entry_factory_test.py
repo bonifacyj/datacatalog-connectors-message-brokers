@@ -25,7 +25,8 @@ class AssembledEntryFactoryTestCase(unittest.TestCase):
         tag_factory = prepare.DataCatalogTagFactory()
         self.__assembled_entry_factory = prepare.assembled_entry_factory. \
             AssembledEntryFactory(
-                AssembledEntryFactoryTestCase.__ENTRY_GROUP_ID, entry_factory, tag_factory)
+                AssembledEntryFactoryTestCase.__ENTRY_GROUP_ID,
+                entry_factory, tag_factory)
 
     def test_dc_entries_should_be_created_from_cluster_metadata(
             self, entry_path):

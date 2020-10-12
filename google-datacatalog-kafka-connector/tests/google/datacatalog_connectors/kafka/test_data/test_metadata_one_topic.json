@@ -1,14 +1,15 @@
 {
+  "bootstrap_server": "fake_host",
   "cluster_id" : "1234",
-  "brokers_num": 3,
+  "num_brokers": 2,
   "topics": [
         {
       "name": "temperature",
       "num_partitions": 3,
-      "retention_time": "172800000 ms",
-      "retention_space": "12 MB",
-      "min_compaction_lag": "200 ms",
-      "max_compaction_lag": "9223372036854775807 ms",
+      "retention_time": "172800000",
+      "retention_space": "12",
+      "min_compaction_lag": "200",
+      "max_compaction_lag": "9223372036854775807",
       "cleanup_policy": "delete, compact"
     }
   ]
