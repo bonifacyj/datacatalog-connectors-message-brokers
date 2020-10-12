@@ -15,7 +15,7 @@ class TagTemplateConstants:
     IS_REQUIRED_IDX = 2
 
     @staticmethod
-    def get_fields_dict_for_cluster_tag_templates():
+    def get_fields_dict_for_cluster_tag_template():
         fields_dict = {
             'num_brokers':
                 ('Number of brokers',
@@ -33,7 +33,7 @@ class TagTemplateConstants:
         return fields_dict
 
     @staticmethod
-    def get_fields_dict_for_topic_tag_templates():
+    def get_fields_dict_for_topic_tag_template():
         fields_dict = {
             'num_partitions':
                 ('Number of partitions',

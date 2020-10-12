@@ -22,7 +22,7 @@ class DataCatalogTagTemplateFactoryTest(unittest.TestCase):
                          "My_entry_group Cluster - Metadata")
         self._assert_fields(
             tag_template,
-            TagTemplateConstants.get_fields_dict_for_cluster_tag_templates)
+            TagTemplateConstants.get_fields_dict_for_cluster_tag_template)
 
     def test_create_tag_template_for_topic_metadata(self):
         factory = DataCatalogTagTemplateFactory(self.__PROJECT_ID,
@@ -35,7 +35,7 @@ class DataCatalogTagTemplateFactoryTest(unittest.TestCase):
                          "My_entry_group Topic - Metadata")
         self._assert_fields(
             tag_template,
-            TagTemplateConstants.get_fields_dict_for_topic_tag_templates)
+            TagTemplateConstants.get_fields_dict_for_topic_tag_template)
 
     def _assert_fields(self, tag_template, get_fields_function):
         fields = get_fields_function()

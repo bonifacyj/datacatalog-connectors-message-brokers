@@ -15,6 +15,6 @@
 # limitations under the License.
 
 from .metadata_constants import MetadataConstants
-from .tag_templates_constants import TagTemplateConstants
+from .tag_template_constants import TagTemplateConstants
 
 __all__ = ('MetadataConstants', 'TagTemplateConstants')

@@ -36,7 +36,7 @@ class DataCatalogTagTemplateFactory:
             metadata_type="cluster")
 
         fields = TagTemplateConstants.\
-            get_fields_dict_for_cluster_tag_templates()
+            get_fields_dict_for_cluster_tag_template()
         for field_name, field_attributes in fields.items():
             tag_template.fields[
                 field_name].type.primitive_type = field_attributes[
@@ -57,7 +57,7 @@ class DataCatalogTagTemplateFactory:
         tag_template_id, tag_template = self._initialize_tag_template(
             metadata_type="topic")
 
-        fields = TagTemplateConstants.get_fields_dict_for_topic_tag_templates()
+        fields = TagTemplateConstants.get_fields_dict_for_topic_tag_template()
         for field_name, field_attributes in fields.items():
             tag_template.fields[
                 field_name].type.primitive_type = field_attributes[
