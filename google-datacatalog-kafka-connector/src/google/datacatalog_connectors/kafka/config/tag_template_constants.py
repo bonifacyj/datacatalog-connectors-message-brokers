@@ -10,54 +10,60 @@ class TagTemplateConstants:
     in the tag templates.
     """
 
-    DISPLAY_NAME_IDX = 0
-    FIELD_TYPE_IDX = 1
-    IS_REQUIRED_IDX = 2
+    def __init__(self):
+        self.field_constants_for_cluster = self.\
+            _define_constants_for_cluster_tag_template()
+        self.field_constants_for_topic = self.\
+            _define_constants_for_topic_tag_template()
 
-    @staticmethod
-    def get_fields_dict_for_cluster_tag_template():
-        fields_dict = {
-            'num_brokers':
-                ('Number of brokers',
-                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE,
-                 False),
-            'num_topics':
-                ('Number of topics',
-                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE,
-                 False),
-            'bootstrap_address':
-                ('Bootstrap address',
-                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING, True
-                )  # noqa E124 ignore closing bracket does not match identation
-        }
-        return fields_dict
+    class TagTemplateFieldConstants:
 
-    @staticmethod
-    def get_fields_dict_for_topic_tag_template():
-        fields_dict = {
-            'num_partitions':
-                ('Number of partitions',
-                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE),
-            'retention_time':
-                ('Retention time',
-                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING),
-            'retention_space':
-                ('Max retention space',
-                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE),
-            'min_compaction_lag':
-                ('Min compaction lag',
-                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING),
-            'max_compaction_lag':
-                ('Max compaction lag',
-                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING),
-            'cleanup_policy':
-                ('Cleanup policy',
-                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING),
-            'consumer_groups':
-                ('Consumer groups',
-                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING),
-            'schema':
-                ('Schema',
-                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-        }
-        return fields_dict
+        def __init__(self, name, display_name, field_type, is_required=False):
+            self.name = name
+            self.display_name = display_name
+            self.type = field_type
+            self.is_required = is_required
+
+    def _define_constants_for_cluster_tag_template(self):
+        num_brokers = self.TagTemplateFieldConstants(
+            'num_brokers', 'Number of brokers',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
+        num_topics = self.TagTemplateFieldConstants(
+            'num_topics', 'Number of topics',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
+        bootstrap_address = self.TagTemplateFieldConstants(
+            'bootstrap_address', 'Bootstrap address',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING, True)
+        return [num_brokers, num_topics, bootstrap_address]
+
+    def _define_constants_for_topic_tag_template(self):
+        num_partitions = self.TagTemplateFieldConstants(
+            'num_partitions', 'Number of partitions',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
+        retention_time = self.TagTemplateFieldConstants(
+            'retention_ms', 'Retention.ms',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+        retention_space = self.TagTemplateFieldConstants(
+            'retention_bytes', 'Retention.bytes',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+        min_compaction_lag = self.TagTemplateFieldConstants(
+            'min_compaction_lag_ms', 'Min.compaction.lag.ms',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+        max_compaction_lag = self.TagTemplateFieldConstants(
+            'max_compaction_lag_ms', 'Max.compaction.lag.ms',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+        cleanup_policy = self.TagTemplateFieldConstants(
+            'cleanup_policy', 'Cleanup.policy',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+        consumer_groups = self.TagTemplateFieldConstants(
+            'consumer_groups', 'Consumer groups',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+        schema = self.TagTemplateFieldConstants(
+            'schema', 'Schema',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+        topic_tag_template_fields = [
+            num_partitions, retention_time, retention_space,
+            min_compaction_lag, max_compaction_lag, cleanup_policy,
+            consumer_groups, schema
+        ]
+        return topic_tag_template_fields

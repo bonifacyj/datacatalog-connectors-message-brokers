@@ -20,9 +20,8 @@ class DataCatalogTagTemplateFactoryTest(unittest.TestCase):
         self.assertEqual(tag_template_id, "my_entry_group_cluster_metadata")
         self.assertEqual(tag_template.display_name,
                          "My_entry_group Cluster - Metadata")
-        self._assert_fields(
-            tag_template,
-            TagTemplateConstants.get_fields_dict_for_cluster_tag_template)
+        self._assert_fields(tag_template,
+                            TagTemplateConstants().field_constants_for_cluster)
 
     def test_create_tag_template_for_topic_metadata(self):
         factory = DataCatalogTagTemplateFactory(self.__PROJECT_ID,
@@ -33,20 +32,15 @@ class DataCatalogTagTemplateFactoryTest(unittest.TestCase):
         self.assertEqual(tag_template_id, "my_entry_group_topic_metadata")
         self.assertEqual(tag_template.display_name,
                          "My_entry_group Topic - Metadata")
-        self._assert_fields(
-            tag_template,
-            TagTemplateConstants.get_fields_dict_for_topic_tag_template)
+        self._assert_fields(tag_template,
+                            TagTemplateConstants().field_constants_for_topic)
 
-    def _assert_fields(self, tag_template, get_fields_function):
-        fields = get_fields_function()
-        for field_name, field_attributes in fields.items():
+    def _assert_fields(self, tag_template, fields):
+        for field in fields:
+            self.assertEqual(tag_template.fields[field.name].display_name,
+                             field.display_name)
             self.assertEqual(
-                tag_template.fields[field_name].display_name,
-                field_attributes[TagTemplateConstants.DISPLAY_NAME_IDX])
-            self.assertEqual(
-                tag_template.fields[field_name].type.primitive_type,
-                field_attributes[TagTemplateConstants.FIELD_TYPE_IDX])
-            if TagTemplateConstants.IS_REQUIRED_IDX < len(field_attributes):
-                self.assertEqual(
-                    tag_template.fields[field_name].is_required,
-                    field_attributes[TagTemplateConstants.IS_REQUIRED_IDX])
+                tag_template.fields[field.name].type.primitive_type,
+                field.type)
+            self.assertEqual(tag_template.fields[field.name].is_required,
+                             field.is_required)

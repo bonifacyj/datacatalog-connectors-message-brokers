@@ -35,16 +35,8 @@ class DataCatalogTagTemplateFactory:
         tag_template_id, tag_template = self._initialize_tag_template(
             metadata_type="cluster")
 
-        fields = TagTemplateConstants.\
-            get_fields_dict_for_cluster_tag_template()
-        for field_name, field_attributes in fields.items():
-            tag_template.fields[
-                field_name].type.primitive_type = field_attributes[
-                    TagTemplateConstants.FIELD_TYPE_IDX]
-            tag_template.fields[field_name].display_name = field_attributes[
-                TagTemplateConstants.DISPLAY_NAME_IDX]
-            tag_template.fields[field_name].is_required = field_attributes[
-                TagTemplateConstants.IS_REQUIRED_IDX]
+        fields = TagTemplateConstants().field_constants_for_cluster
+        tag_template = self._create_fields(fields, tag_template)
 
         return tag_template_id, tag_template
 
@@ -57,13 +49,8 @@ class DataCatalogTagTemplateFactory:
         tag_template_id, tag_template = self._initialize_tag_template(
             metadata_type="topic")
 
-        fields = TagTemplateConstants.get_fields_dict_for_topic_tag_template()
-        for field_name, field_attributes in fields.items():
-            tag_template.fields[
-                field_name].type.primitive_type = field_attributes[
-                    TagTemplateConstants.FIELD_TYPE_IDX]
-            tag_template.fields[field_name].display_name = field_attributes[
-                TagTemplateConstants.DISPLAY_NAME_IDX]
+        fields = TagTemplateConstants().field_constants_for_topic
+        tag_template = self._create_fields(fields, tag_template)
 
         return tag_template_id, tag_template
 
@@ -81,3 +68,10 @@ class DataCatalogTagTemplateFactory:
         tag_template.display_name = '{} {} - Metadata'.format(
             self.__entry_group_id.capitalize(), metadata_type.capitalize())
         return tag_template_id, tag_template
+
+    def _create_fields(self, fields, tag_template):
+        for field in fields:
+            tag_template.fields[field.name].type.primitive_type = field.type
+            tag_template.fields[field.name].display_name = field.display_name
+            tag_template.fields[field.name].is_required = field.is_required
+        return tag_template
