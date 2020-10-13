@@ -48,6 +48,7 @@ class DataCatalogSynchronizer:
 
         logging.info('\n\n==============Prepare metadata===============')
 
+        tag_templates = self.__create_tag_templates()
         prepared_entries = self.__prepare_datacatalog_entries(metadata)
 
         self._log_entries(prepared_entries)
@@ -56,7 +57,7 @@ class DataCatalogSynchronizer:
 
         self.__delete_obsolete_metadata(prepared_entries)
 
-        self.__ingest_metadata(prepared_entries)
+        self.__ingest_metadata(prepared_entries, tag_templates)
 
         logging.info('\n============End %s-to-datacatalog============',
                      self.__entry_group_id)
@@ -83,11 +84,28 @@ class DataCatalogSynchronizer:
         cleaner.delete_obsolete_metadata(
             prepared_entries, 'system={}'.format(self.__entry_group_id))
 
-    def __ingest_metadata(self, prepared_entries):
+    def __ingest_metadata(self, prepared_entries, tag_templates_dict):
         logging.info('\nStarting to ingest custom metadata...')
         ingestor = datacatalog_metadata_ingestor.DataCatalogMetadataIngestor(
             self.__project_id, self.__location_id, self.__entry_group_id)
-        ingestor.ingest_metadata(prepared_entries)
+        ingestor.ingest_metadata(prepared_entries,
+                                 tag_templates_dict=tag_templates_dict)
+
+    def __create_tag_templates(self):
+        tag_template_factory = self._get_tag_template_factory()(
+            self.__project_id, self.__location_id, self.__entry_group_id)
+
+        cluster_tag_template_id, cluster_tag_template = \
+            tag_template_factory.create_tag_template_for_cluster_metadata()
+
+        topic_tag_template_id, topic_tag_template = \
+            tag_template_factory.create_tag_template_for_topic_metadata()
+
+        tag_templates_dict = \
+            {cluster_tag_template_id: cluster_tag_template,
+             topic_tag_template_id: topic_tag_template}
+
+        return tag_templates_dict
 
     # Create factories
     def __create_assembled_entry_factory(self):
@@ -124,3 +142,8 @@ class DataCatalogSynchronizer:
     @classmethod
     def _get_entry_factory(cls):
         return prepare.datacatalog_entry_factory.DataCatalogEntryFactory
+
+    @classmethod
+    def _get_tag_template_factory(cls):
+        return prepare.datacatalog_tag_template_factory. \
+            DataCatalogTagTemplateFactory
