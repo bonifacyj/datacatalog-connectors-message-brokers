@@ -16,7 +16,7 @@ class TagTemplateConstants:
         self.field_constants_for_topic = self.\
             _define_constants_for_topic_tag_template()
 
-    class TagTemplateFieldConstants:
+    class TagTemplateField:
 
         def __init__(self, name, display_name, field_type, is_required=False):
             self.name = name
@@ -25,40 +25,40 @@ class TagTemplateConstants:
             self.is_required = is_required
 
     def _define_constants_for_cluster_tag_template(self):
-        num_brokers = self.TagTemplateFieldConstants(
+        num_brokers = self.TagTemplateField(
             'num_brokers', 'Number of brokers',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
-        num_topics = self.TagTemplateFieldConstants(
+        num_topics = self.TagTemplateField(
             'num_topics', 'Number of topics',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
-        bootstrap_address = self.TagTemplateFieldConstants(
+        bootstrap_address = self.TagTemplateField(
             'bootstrap_address', 'Bootstrap address',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING, True)
         return [num_brokers, num_topics, bootstrap_address]
 
     def _define_constants_for_topic_tag_template(self):
-        num_partitions = self.TagTemplateFieldConstants(
+        num_partitions = self.TagTemplateField(
             'num_partitions', 'Number of partitions',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
-        retention_time = self.TagTemplateFieldConstants(
+        retention_time = self.TagTemplateField(
             'retention_ms', 'Retention.ms',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-        retention_space = self.TagTemplateFieldConstants(
+        retention_space = self.TagTemplateField(
             'retention_bytes', 'Retention.bytes',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-        min_compaction_lag = self.TagTemplateFieldConstants(
+        min_compaction_lag = self.TagTemplateField(
             'min_compaction_lag_ms', 'Min.compaction.lag.ms',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-        max_compaction_lag = self.TagTemplateFieldConstants(
+        max_compaction_lag = self.TagTemplateField(
             'max_compaction_lag_ms', 'Max.compaction.lag.ms',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-        cleanup_policy = self.TagTemplateFieldConstants(
+        cleanup_policy = self.TagTemplateField(
             'cleanup_policy', 'Cleanup.policy',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-        consumer_groups = self.TagTemplateFieldConstants(
+        consumer_groups = self.TagTemplateField(
             'consumer_groups', 'Consumer groups',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-        schema = self.TagTemplateFieldConstants(
+        schema = self.TagTemplateField(
             'schema', 'Schema',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         topic_tag_template_fields = [
