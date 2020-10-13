@@ -72,31 +72,31 @@ class TagTemplateConstants:
             'num_partitions', 'Number of partitions',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
         retention_time = self.TagTemplateFieldConstants(
-            'retention_ms', 'Retention.ms',
+            'retention_ms', 'Retention ms',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
         retention_time_as_text = self.TagTemplateFieldConstants(
             'retention_duration_as_text', 'Retention time',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         retention_space = self.TagTemplateFieldConstants(
-            'retention_bytes', 'Retention.bytes',
+            'retention_bytes', 'Retention bytes',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
         retention_space_as_text = self.TagTemplateFieldConstants(
             'retention_size_as_text', 'Retention size',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         min_compaction_lag = self.TagTemplateFieldConstants(
-            'min_compaction_lag_ms', 'Min.compaction.lag.ms',
+            'min_compaction_lag_ms', 'Min compaction lag ms',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
         min_compaction_lag_as_text = self.TagTemplateFieldConstants(
             'min_compaction_lag', 'Min compaction lag',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         max_compaction_lag = self.TagTemplateFieldConstants(
-            'max_compaction_lag_ms', 'Max.compaction.lag.ms',
+            'max_compaction_lag_ms', 'Max compaction lag ms',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
         max_compaction_lag_as_text = self.TagTemplateFieldConstants(
             'max_compaction_lag', 'Max compaction lag',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         cleanup_policy = self.TagTemplateFieldConstants(
-            'cleanup_policy', 'Cleanup.policy',
+            'cleanup_policy', 'Cleanup policy',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         consumer_groups = self.TagTemplateFieldConstants(
             'consumer_groups', 'Consumer groups',
