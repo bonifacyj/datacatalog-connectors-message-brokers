@@ -41,19 +41,19 @@ class TagTemplateConstants:
             'num_partitions', 'Number of partitions',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
         retention_time = self.TagTemplateField(
-            'retention_ms', 'Retention.ms',
+            'retention_ms', 'Retention ms',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         retention_space = self.TagTemplateField(
-            'retention_bytes', 'Retention.bytes',
+            'retention_bytes', 'Retention bytes',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         min_compaction_lag = self.TagTemplateField(
-            'min_compaction_lag_ms', 'Min.compaction.lag.ms',
+            'min_compaction_lag_ms', 'Min compaction lag ms',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         max_compaction_lag = self.TagTemplateField(
-            'max_compaction_lag_ms', 'Max.compaction.lag.ms',
+            'max_compaction_lag_ms', 'Max compaction lag ms',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         cleanup_policy = self.TagTemplateField(
-            'cleanup_policy', 'Cleanup.policy',
+            'cleanup_policy', 'Cleanup policy',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         consumer_groups = self.TagTemplateField(
             'consumer_groups', 'Consumer groups',
