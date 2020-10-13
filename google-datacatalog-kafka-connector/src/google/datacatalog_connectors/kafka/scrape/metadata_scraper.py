@@ -1,11 +1,12 @@
 import logging
 
-from confluent_kafka.cimpl import KafkaException
-from google.datacatalog_connectors.kafka.config.\
-    metadata_constants import MetadataConstants
-
 import confluent_kafka
 from confluent_kafka.admin import ConfigResource
+from confluent_kafka.cimpl import KafkaException
+
+from google.datacatalog_connectors.kafka.config.\
+    metadata_constants import MetadataConstants
+from .metadata_values_converter import MetadataValuesConverter
 
 
 class MetadataScraper:
@@ -80,7 +81,11 @@ class MetadataScraper:
         # todo: make time and space info understandable for humans
         retention_time = config['retention.ms'].value
         topic_retention_config = {
-            MetadataConstants.RETENTION_TIME: retention_time
+            MetadataConstants.RETENTION_TIME:
+                retention_time,
+            MetadataConstants.RETENTION_TIME_TEXT:
+                MetadataValuesConverter().get_human_readable_duration_value(
+                    int(retention_time))
         }
         retention_space = config['retention.bytes'].value
         if retention_space != '-1':
@@ -88,6 +93,10 @@ class MetadataScraper:
             # therefore we ignore it
             topic_retention_config[MetadataConstants.RETENTION_SPACE] = int(
                 retention_space)
+            topic_retention_config[
+                MetadataConstants.
+                RETENTION_SPACE_TEXT] = MetadataValuesConverter(
+                ).get_human_readable_size_value(int(retention_space))
         return topic_retention_config
 
     def _get_topic_compaction_config(self, config):
