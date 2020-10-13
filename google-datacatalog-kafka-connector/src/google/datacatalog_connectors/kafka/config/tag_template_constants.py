@@ -11,12 +11,11 @@ class TagTemplateConstants:
     """
 
     def __init__(self):
-        self.cluster_fields = None
-        self.topic_fields = None
-        self.field_constants_for_cluster = self.\
-            _define_constants_for_cluster_tag_template()
-        self.field_constants_for_topic = self.\
-            _define_constants_for_topic_tag_template()
+        self.cluster_fields = self._define_constants_for_cluster_tag_template()
+        self.topic_fields = self._define_constants_for_topic_tag_template()
+        self.cluster_constants_list = list(
+            self.cluster_fields.__dict__.values())
+        self.topic_constants_list = list(self.topic_fields.__dict__.values())
 
     class TagTemplateFieldConstants:
 
@@ -35,14 +34,21 @@ class TagTemplateConstants:
 
     class TopicFields:
 
-        def __init__(self, num_partitions, retention_time, retention_space,
-                     min_compaction_lag, max_compaction_lag, cleanup_policy,
+        def __init__(self, num_partitions, retention_time,
+                     retention_time_as_text, retention_space,
+                     retention_space_as_text, min_compaction_lag,
+                     min_compaction_lag_as_text, max_compaction_lag,
+                     max_compaction_lag_as_text, cleanup_policy,
                      consumer_groups, schema):
             self.num_partitions = num_partitions
             self.retention_time = retention_time
+            self.retention_time_as_text = retention_time_as_text
             self.retention_space = retention_space
+            self.retention_space_as_text = retention_space_as_text
             self.min_compaction_lag = min_compaction_lag
+            self.min_compaction_lag_as_text = min_compaction_lag_as_text
             self.max_compaction_lag = max_compaction_lag
+            self.max_compaction_lag_as_text = max_compaction_lag_as_text
             self.cleanup_policy = cleanup_policy
             self.consumer_groups = consumer_groups
             self.schema = schema
@@ -57,9 +63,9 @@ class TagTemplateConstants:
         bootstrap_address = self.TagTemplateFieldConstants(
             'bootstrap_address', 'Bootstrap address',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING, True)
-        self.cluster_fields = self.ClusterFields(num_brokers, num_topics,
-                                                 bootstrap_address)
-        return [num_brokers, num_topics, bootstrap_address]
+        cluster_fields = self.ClusterFields(num_brokers, num_topics,
+                                            bootstrap_address)
+        return cluster_fields
 
     def _define_constants_for_topic_tag_template(self):
         num_partitions = self.TagTemplateFieldConstants(
@@ -67,15 +73,27 @@ class TagTemplateConstants:
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
         retention_time = self.TagTemplateFieldConstants(
             'retention_ms', 'Retention.ms',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
+        retention_time_as_text = self.TagTemplateFieldConstants(
+            'retention_duration_as_text', 'Retention time',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         retention_space = self.TagTemplateFieldConstants(
             'retention_bytes', 'Retention.bytes',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
+        retention_space_as_text = self.TagTemplateFieldConstants(
+            'retention_size_as_text', 'Retention size',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         min_compaction_lag = self.TagTemplateFieldConstants(
             'min_compaction_lag_ms', 'Min.compaction.lag.ms',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
+        min_compaction_lag_as_text = self.TagTemplateFieldConstants(
+            'min_compaction_lag', 'Min compaction lag',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         max_compaction_lag = self.TagTemplateFieldConstants(
             'max_compaction_lag_ms', 'Max.compaction.lag.ms',
+            datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
+        max_compaction_lag_as_text = self.TagTemplateFieldConstants(
+            'max_compaction_lag', 'Max compaction lag',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
         cleanup_policy = self.TagTemplateFieldConstants(
             'cleanup_policy', 'Cleanup.policy',
@@ -86,15 +104,10 @@ class TagTemplateConstants:
         schema = self.TagTemplateFieldConstants(
             'schema', 'Schema',
             datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-        self.topic_fields = self.TopicFields(num_partitions, retention_time,
-                                             retention_space,
-                                             min_compaction_lag,
-                                             max_compaction_lag,
-                                             cleanup_policy, consumer_groups,
-                                             schema)
-        topic_tag_template_fields = [
-            num_partitions, retention_time, retention_space,
-            min_compaction_lag, max_compaction_lag, cleanup_policy,
-            consumer_groups, schema
-        ]
-        return topic_tag_template_fields
+        topic_fields = self.TopicFields(
+            num_partitions, retention_time, retention_time_as_text,
+            retention_space, retention_space_as_text, min_compaction_lag,
+            min_compaction_lag_as_text, max_compaction_lag,
+            max_compaction_lag_as_text, cleanup_policy, consumer_groups,
+            schema)
+        return topic_fields

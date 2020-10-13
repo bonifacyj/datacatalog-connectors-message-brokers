@@ -78,14 +78,13 @@ class MetadataScraper:
         return topic_description
 
     def _get_topic_retention_config(self, config):
-        # todo: make time and space info understandable for humans
         retention_time = config['retention.ms'].value
         topic_retention_config = {
             MetadataConstants.RETENTION_TIME:
-                retention_time,
+                int(retention_time),
             MetadataConstants.RETENTION_TIME_TEXT:
-                MetadataValuesConverter().get_human_readable_duration_value(
-                    int(retention_time))
+                MetadataValuesConverter.get_human_readable_duration_value(
+                    retention_time)
         }
         retention_space = config['retention.bytes'].value
         if retention_space != '-1':
@@ -95,16 +94,24 @@ class MetadataScraper:
                 retention_space)
             topic_retention_config[
                 MetadataConstants.
-                RETENTION_SPACE_TEXT] = MetadataValuesConverter(
-                ).get_human_readable_size_value(int(retention_space))
+                RETENTION_SPACE_TEXT] = MetadataValuesConverter.\
+                get_human_readable_size_value(
+                    retention_space)
         return topic_retention_config
 
     def _get_topic_compaction_config(self, config):
-        # todo: make time info understandable for humans
         min_compaction_lag = config['min.compaction.lag.ms'].value
         max_compaction_lag = config['max.compaction.lag.ms'].value
         topic_compaction_config = {
-            "min_compaction_lag": min_compaction_lag,
-            "max_compaction_lag": max_compaction_lag
+            MetadataConstants.MIN_COMPACTION_LAG:
+                int(min_compaction_lag),
+            MetadataConstants.MIN_COMPACTION_LAG_TEXT:
+                MetadataValuesConverter.get_human_readable_duration_value(
+                    min_compaction_lag),
+            MetadataConstants.MAX_COMPACTION_LAG:
+                int(max_compaction_lag),
+            MetadataConstants.MAX_COMPACTION_LAG_TEXT:
+                MetadataValuesConverter.get_human_readable_duration_value(
+                    max_compaction_lag)
         }
         return topic_compaction_config

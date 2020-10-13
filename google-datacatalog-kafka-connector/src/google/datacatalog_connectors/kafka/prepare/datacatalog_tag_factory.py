@@ -1,5 +1,6 @@
 from google.cloud import datacatalog_v1beta1
-from google.datacatalog_connectors.kafka.config import MetadataConstants, TagTemplateConstants
+from google.datacatalog_connectors.kafka.config import \
+    MetadataConstants, TagTemplateConstants
 
 
 class DataCatalogTagFactory:
@@ -34,19 +35,32 @@ class DataCatalogTagFactory:
         retention_time = topic_metadata.get(MetadataConstants.RETENTION_TIME)
         if retention_time:
             tag.fields[template_fields.retention_time.
-                       name].string_value = retention_time
+                       name].double_value = retention_time
+            tag.fields[template_fields.retention_time_as_text.
+                       name].string_value = topic_metadata.get(
+                           MetadataConstants.RETENTION_TIME_TEXT)
         retention_space = topic_metadata.get(MetadataConstants.RETENTION_SPACE)
         if retention_space:
             tag.fields[template_fields.retention_space.
                        name].double_value = retention_space
+            tag.fields[template_fields.retention_space_as_text.
+                       name].string_value = topic_metadata.get(
+                           MetadataConstants.RETENTION_SPACE_TEXT)
         min_compaction_lag = topic_metadata.get(
             MetadataConstants.MIN_COMPACTION_LAG)
         if min_compaction_lag:
             tag.fields[template_fields.min_compaction_lag.
-                       name].string_value = min_compaction_lag
+                       name].double_value = min_compaction_lag
+            tag.fields[template_fields.min_compaction_lag_as_text.
+                       name].string_value = topic_metadata.get(
+                           MetadataConstants.MIN_COMPACTION_LAG_TEXT)
+
         max_compaction_lag = topic_metadata.get(
             MetadataConstants.MAX_COMPACTION_LAG)
         if max_compaction_lag:
             tag.fields[template_fields.max_compaction_lag.
-                       name].string_value = max_compaction_lag
+                       name].double_value = max_compaction_lag
+            tag.fields[template_fields.max_compaction_lag_as_text.
+                       name].string_value = topic_metadata.get(
+                           MetadataConstants.MAX_COMPACTION_LAG_TEXT)
         return tag

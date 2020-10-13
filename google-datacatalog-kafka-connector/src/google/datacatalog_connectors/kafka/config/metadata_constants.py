@@ -10,5 +10,7 @@ class MetadataConstants:
     RETENTION_SPACE = "retention_space"
     RETENTION_SPACE_TEXT = "retention_space_as_text"
     MIN_COMPACTION_LAG = "min_compaction_lag"
+    MIN_COMPACTION_LAG_TEXT = "min_compaction_lag_text"
     MAX_COMPACTION_LAG = "max_compaction_lag"
+    MAX_COMPACTION_LAG_TEXT = "max_compaction_lag_text"
     BOOTSTRAP_SERVER = "bootstrap_server"

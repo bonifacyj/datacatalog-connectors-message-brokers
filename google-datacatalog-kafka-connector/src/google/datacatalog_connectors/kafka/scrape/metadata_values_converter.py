@@ -10,12 +10,14 @@ class MetadataValuesConverter:
     human-readable format.
     '''
 
-    def get_human_readable_duration_value(self, duration):
+    @staticmethod
+    def get_human_readable_duration_value(duration):
         '''
-        :param duration: int, in milliseconds
+        :param duration: int or string, in milliseconds
         :return: duration string in a shape
         X y X d X h X min etc
         '''
+        duration = int(duration)
         duration_in_microseconds = duration * 1000
         duration_time = _Relativedelta(microseconds=duration_in_microseconds)
         human_readable_duration = ''
@@ -32,13 +34,15 @@ class MetadataValuesConverter:
         if duration_time.microseconds > 0:
             human_readable_duration += ' {} ms'.format(
                 duration_time.microseconds / 1000)
-        return human_readable_duration
+        return human_readable_duration.strip()
 
-    def get_human_readable_size_value(self, size_val):
+    @staticmethod
+    def get_human_readable_size_value(size_val):
         '''
-        :param size_val: int, in bytes
+        :param size_val: int or string, in bytes
         :return: human-readable size
         '''
+        size_val = int(size_val)
         units = ['bytes', 'KB', 'MB', 'GB']
         for unit in units:
             if size_val < 1024.0:

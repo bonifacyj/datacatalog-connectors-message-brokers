@@ -51,17 +51,28 @@ class DataCatalogTagFactoryTest(unittest.TestCase):
         topic_metadata = {
             MetadataConstants.NUM_PARTITIONS: 3,
             MetadataConstants.CLEANUP_POLICY: 'delete, compact',
-            MetadataConstants.RETENTION_TIME: '500',
+            MetadataConstants.RETENTION_TIME: 500,
+            MetadataConstants.RETENTION_TIME_TEXT: "500 ms",
             MetadataConstants.RETENTION_SPACE: 20,
-            MetadataConstants.MIN_COMPACTION_LAG: '100',
-            MetadataConstants.MAX_COMPACTION_LAG: '12345670'
+            MetadataConstants.RETENTION_SPACE_TEXT: "20 bytes",
+            MetadataConstants.MIN_COMPACTION_LAG: 100,
+            MetadataConstants.MIN_COMPACTION_LAG_TEXT: "100 ms",
+            MetadataConstants.MAX_COMPACTION_LAG: 172800000,
+            MetadataConstants.MAX_COMPACTION_LAG_TEXT: "2 d"
         }
         tag = tag_factory.make_tag_for_topic(tag_template, topic_metadata)
         self.assertEqual(3, tag.fields['num_partitions'].double_value)
         self.assertEqual('delete, compact',
                          tag.fields['cleanup_policy'].string_value)
-        self.assertEqual('500', tag.fields['retention_time'].string_value)
-        self.assertEqual(20, tag.fields['retention_space'].double_value)
-        self.assertEqual('100', tag.fields['min_compaction_lag'].string_value)
-        self.assertEqual('12345670',
-                         tag.fields['max_compaction_lag'].string_value)
+        self.assertEqual(500, tag.fields['retention_ms'].double_value)
+        self.assertEqual("500 ms",
+                         tag.fields['retention_duration_as_text'].string_value)
+        self.assertEqual(20, tag.fields['retention_bytes'].double_value)
+        self.assertEqual("20 bytes",
+                         tag.fields['retention_size_as_text'].string_value)
+        self.assertEqual(100, tag.fields['min_compaction_lag_ms'].double_value)
+        self.assertEqual("100 ms",
+                         tag.fields['min_compaction_lag'].string_value)
+        self.assertEqual(172800000,
+                         tag.fields['max_compaction_lag_ms'].double_value)
+        self.assertEqual("2 d", tag.fields['max_compaction_lag'].string_value)

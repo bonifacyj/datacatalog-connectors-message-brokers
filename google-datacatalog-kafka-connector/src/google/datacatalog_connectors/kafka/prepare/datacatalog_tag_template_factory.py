@@ -35,7 +35,7 @@ class DataCatalogTagTemplateFactory:
         tag_template_id, tag_template = self._initialize_tag_template(
             metadata_type="cluster")
 
-        fields = TagTemplateConstants().field_constants_for_cluster
+        fields = TagTemplateConstants().cluster_constants_list
         tag_template = self._create_fields(fields, tag_template)
 
         return tag_template_id, tag_template
@@ -49,7 +49,7 @@ class DataCatalogTagTemplateFactory:
         tag_template_id, tag_template = self._initialize_tag_template(
             metadata_type="topic")
 
-        fields = TagTemplateConstants().field_constants_for_topic
+        fields = TagTemplateConstants().topic_constants_list
         tag_template = self._create_fields(fields, tag_template)
 
         return tag_template_id, tag_template

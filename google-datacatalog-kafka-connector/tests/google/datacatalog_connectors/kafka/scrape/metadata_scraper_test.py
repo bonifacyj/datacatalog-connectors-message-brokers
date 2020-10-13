@@ -48,4 +48,5 @@ class MetadataScraperTestCase(unittest.TestCase):
         metadata = scraper.get_metadata()
         expected_metadata = utils.Utils.convert_json_to_object(
             self.__MODULE_PATH, 'test_metadata_one_topic.json')
+        self.maxDiff = None
         self.assertEqual(metadata, expected_metadata)

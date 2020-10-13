@@ -6,10 +6,14 @@
         {
       "name": "temperature",
       "num_partitions": 3,
-      "retention_time": "172800000",
+      "retention_time": 172800000,
+      "retention_time_as_text": "2 d",
       "retention_space": 12,
-      "min_compaction_lag": "200",
-      "max_compaction_lag": "9223372036854775807",
+      "retention_space_as_text": "12 bytes",
+      "min_compaction_lag": 200,
+      "min_compaction_lag_text": "200.0 ms",
+      "max_compaction_lag": 9223372036854775807,
+      "max_compaction_lag_text": "292471208 y 247 d 7 h 12 min 55 sec 807.0 ms",
       "cleanup_policy": "delete, compact"
     }
   ]
