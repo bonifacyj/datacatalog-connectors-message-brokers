@@ -5,13 +5,11 @@ from google.datacatalog_connectors.kafka.config import \
 
 class DataCatalogTagFactory:
 
-    def __init__(self):
-        self._tag_template_constants = TagTemplateConstants()
-
     def make_tag_for_cluster(self, tag_template, cluster_metadata):
         tag = datacatalog_v1beta1.types.Tag()
         tag.template = tag_template.name
-        template_fields = self._tag_template_constants.cluster_fields
+        template_fields = TagTemplateConstants.\
+            get_constants_for_cluster_tag_template()
         tag.fields[
             template_fields.num_brokers.name].double_value = cluster_metadata[
                 MetadataConstants.NUM_BROKERS]
@@ -25,7 +23,8 @@ class DataCatalogTagFactory:
     def make_tag_for_topic(self, tag_template, topic_metadata):
         tag = datacatalog_v1beta1.types.Tag()
         tag.template = tag_template.name
-        template_fields = self._tag_template_constants.topic_fields
+        template_fields = TagTemplateConstants.\
+            get_constants_for_topic_tag_template()
         tag.fields[
             template_fields.num_partitions.name].double_value = topic_metadata[
                 MetadataConstants.NUM_PARTITIONS]
