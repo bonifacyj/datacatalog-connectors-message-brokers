@@ -21,7 +21,7 @@ class DataCatalogTagTemplateFactoryTest(unittest.TestCase):
         self.assertEqual(tag_template.display_name,
                          "My_entry_group Cluster - Metadata")
         self._assert_fields(tag_template,
-                            TagTemplateConstants().cluster_constants_list)
+                            TagTemplateConstants.get_cluster_constants_list())
 
     def test_create_tag_template_for_topic_metadata(self):
         factory = DataCatalogTagTemplateFactory(self.__PROJECT_ID,
@@ -33,7 +33,7 @@ class DataCatalogTagTemplateFactoryTest(unittest.TestCase):
         self.assertEqual(tag_template.display_name,
                          "My_entry_group Topic - Metadata")
         self._assert_fields(tag_template,
-                            TagTemplateConstants().topic_constants_list)
+                            TagTemplateConstants.get_topic_constants_list())
 
     def _assert_fields(self, tag_template, fields):
         for field in fields:

@@ -1,5 +1,5 @@
 import logging
-
+import time
 import confluent_kafka
 from confluent_kafka.admin import ConfigResource
 from confluent_kafka.cimpl import KafkaException
@@ -12,12 +12,12 @@ from .metadata_values_converter import MetadataValuesConverter
 class MetadataScraper:
 
     def __init__(self, client, bootstrap_server):
-        self._adminClient = client
+        self._admin_client = client
         self._bootstrap_server = bootstrap_server
 
     def get_metadata(self):
         try:
-            raw_metadata = self._adminClient.list_topics(timeout=20)
+            raw_metadata = self._admin_client.list_topics(timeout=20)
             topics_metadata = self._get_topics_metadata(raw_metadata)
             cluster_metadata = self._get_cluster_metadata(raw_metadata)
             cluster_metadata.update(topics_metadata)
@@ -39,13 +39,14 @@ class MetadataScraper:
 
     def _get_topics_metadata(self, metadata_object):
         topic_names = metadata_object.topics.keys()
-        descriptions = list()
+        descriptions = []
         config_resources = [
             ConfigResource(confluent_kafka.admin.RESOURCE_TOPIC, topic_name)
             for topic_name in topic_names
         ]
-        config_futures = self._adminClient.describe_configs(config_resources,
-                                                            request_timeout=10)
+        config_futures = self._admin_client.describe_configs(
+            config_resources, request_timeout=10)
+        start_describing = time.time()
         for topic, future in config_futures.items():
             try:
                 config = future.result()
@@ -56,6 +57,9 @@ class MetadataScraper:
                 logging.error("Failed to describe topic {}: {}".format(
                     topic, e))
                 raise
+        end_describing = time.time()
+        logging.info("Described {} topics in {} seconds".format(
+            len(descriptions), end_describing - start_describing))
         topic_metadata = {MetadataConstants.TOPICS: descriptions}
         return topic_metadata
 
