@@ -1,5 +1,5 @@
 import logging
-
+import time
 import confluent_kafka
 from confluent_kafka.admin import ConfigResource
 from confluent_kafka.cimpl import KafkaException
@@ -46,6 +46,7 @@ class MetadataScraper:
         ]
         config_futures = self._admin_client.describe_configs(
             config_resources, request_timeout=10)
+        start_describing = time.time()
         for topic, future in config_futures.items():
             try:
                 config = future.result()
@@ -56,6 +57,9 @@ class MetadataScraper:
                 logging.error("Failed to describe topic {}: {}".format(
                     topic, e))
                 raise
+        end_describing = time.time()
+        logging.info("Described {} topics in {} seconds".format(
+            len(descriptions), end_describing - start_describing))
         topic_metadata = {MetadataConstants.TOPICS: descriptions}
         return topic_metadata
 
