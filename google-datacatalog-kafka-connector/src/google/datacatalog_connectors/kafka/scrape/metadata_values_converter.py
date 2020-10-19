@@ -27,38 +27,38 @@ class MetadataValuesConverter:
     '''
 
     @staticmethod
-    def get_human_readable_duration_value(duration):
+    def get_human_readable_duration_value(duration_ms):
         '''
-        :param duration: int or string, in milliseconds
+        :param duration_ms: int or string, in milliseconds
         :return: duration string in a shape
         X y X d X h X min etc
         '''
-        duration = int(duration)
-        duration_in_microseconds = duration * 1000
+        duration_ms = int(duration_ms)
+        duration_in_microseconds = duration_ms * 1000
         duration_time = _Relativedelta(microseconds=duration_in_microseconds)
         human_readable_duration = ''
         if duration_time.years > 0:
-            human_readable_duration += '{} y'.format(duration_time.years)
+            human_readable_duration += '{}y'.format(duration_time.years)
         if duration_time.days > 0:
-            human_readable_duration += ' {} d'.format(duration_time.days)
+            human_readable_duration += ' {}d'.format(duration_time.days)
         if duration_time.hours > 0:
-            human_readable_duration += ' {} h'.format(duration_time.hours)
+            human_readable_duration += ' {}h'.format(duration_time.hours)
         if duration_time.minutes > 0:
-            human_readable_duration += ' {} min'.format(duration_time.minutes)
+            human_readable_duration += ' {}min'.format(duration_time.minutes)
         if duration_time.seconds > 0:
-            human_readable_duration += ' {} sec'.format(duration_time.seconds)
+            human_readable_duration += ' {}sec'.format(duration_time.seconds)
         if duration_time.microseconds > 0:
-            human_readable_duration += ' {} ms'.format(
+            human_readable_duration += ' {}ms'.format(
                 duration_time.microseconds / 1000)
         return human_readable_duration.strip()
 
     @staticmethod
-    def get_human_readable_size_value(size_val):
+    def get_human_readable_size_value(size_bytes):
         '''
         :param size_val: int or string, in bytes
         :return: human-readable size
         '''
-        size_val = int(size_val)
+        size_val = int(size_bytes)
         units = ['bytes', 'KB', 'MB', 'GB']
         for unit in units:
             if size_val < 1024.0:

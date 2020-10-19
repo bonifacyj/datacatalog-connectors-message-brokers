@@ -24,7 +24,7 @@ class MetadataValuesConverterTest(unittest.TestCase):
 
     def test_duration_is_converted_to_human_redable_format(self):
         input_in_ms = 31764000000
-        expected_output = '1 y 2 d 15 h 20 min'
+        expected_output = '1y 2d 15h 20min'
         output = MetadataValuesConverter.get_human_readable_duration_value(
             input_in_ms)
         self.assertEqual(output, expected_output)
