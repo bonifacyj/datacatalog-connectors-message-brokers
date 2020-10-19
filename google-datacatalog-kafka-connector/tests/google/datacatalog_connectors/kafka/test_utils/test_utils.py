@@ -1,3 +1,19 @@
+#!/usr/bin/python
+#
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import confluent_kafka
 import mock
 from google.cloud import datacatalog_v1beta1
@@ -16,11 +32,24 @@ class FakeDataCatalogEntryFactory(DataCatalogEntryFactory):
         return entry_id, entry
 
 
+class FakeKafkaAdminClientEmptyCluster(mock.MagicMock):
+
+    def list_topics(self, timeout=-1):
+        raw_metadata = ClusterMetadata()
+        raw_metadata.topics = {}
+        raw_metadata.cluster_id = "1234"
+        raw_metadata.brokers = {
+            "testBroker0": BrokerMetadata(),
+            "testBroker1": BrokerMetadata()
+        }
+        return raw_metadata
+
+
 class FakeKafkaAdminClient(mock.MagicMock):
 
     def list_topics(self, timeout=-1):
         '''
-        Mock Consumer returns a description of
+        Mock AdminClient returns a description of
         topic from test_data/test_metadata_one_topic.json
         '''
         test_topic_metadata = TopicMetadata()
@@ -31,7 +60,10 @@ class FakeKafkaAdminClient(mock.MagicMock):
         }
 
         raw_metadata = ClusterMetadata()
-        raw_metadata.topics = {"temperature": test_topic_metadata}
+        raw_metadata.topics = {
+            "temperature": test_topic_metadata,
+            "__consumer_offsets": test_topic_metadata
+        }
         raw_metadata.cluster_id = "1234"
         raw_metadata.brokers = {
             "testBroker0": BrokerMetadata(),

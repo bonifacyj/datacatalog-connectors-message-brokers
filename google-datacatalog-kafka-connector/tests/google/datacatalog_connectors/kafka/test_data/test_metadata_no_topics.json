@@ -1,0 +1,6 @@
+{
+  "bootstrap_server": "fake_host",
+  "cluster_id" : "1234",
+  "num_brokers": 2,
+  "topics": []
+}
