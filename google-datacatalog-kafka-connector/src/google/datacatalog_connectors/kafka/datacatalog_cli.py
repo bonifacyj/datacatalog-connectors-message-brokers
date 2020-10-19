@@ -41,7 +41,7 @@ class DatacatalogCli():
             project_id=args.datacatalog_project_id,
             location_id=args.datacatalog_location_id,
             entry_group_id=self._get_entry_group_id(args),
-            kafka_host=self._get_host_arg(args),
+            kafka_hosts=self._get_host_arg(args),
             connection_config=self._get_connection_config(args),
             metadata_scraper=self._get_metadata_scraper(),
             enable_monitoring=args.enable_monitoring).run()

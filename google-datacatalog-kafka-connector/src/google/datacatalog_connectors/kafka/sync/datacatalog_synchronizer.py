@@ -35,7 +35,7 @@ class DataCatalogSynchronizer:
                  project_id,
                  location_id,
                  entry_group_id,
-                 kafka_host,
+                 kafka_hosts,
                  connection_config,
                  metadata_scraper,
                  enable_monitoring=None):
@@ -43,7 +43,7 @@ class DataCatalogSynchronizer:
         self.__metadata_scraper = metadata_scraper
         self.__project_id = project_id
         self.__location_id = location_id
-        self.__kafka_host = kafka_host
+        self.__kafka_hosts = kafka_hosts
         self.__connection_config = connection_config
         self.__task_id = uuid.uuid4().hex[:8]
         self.__metrics_processor = metrics_processor.MetricsProcessor(
@@ -59,7 +59,7 @@ class DataCatalogSynchronizer:
 
         client = self._create_client()
         metadata = self.__metadata_scraper(client,
-                                           self.__kafka_host).get_metadata()
+                                           self.__kafka_hosts).get_metadata()
 
         self._log_metadata(metadata)
 
@@ -84,7 +84,7 @@ class DataCatalogSynchronizer:
         return self.__task_id
 
     def _create_client(self):
-        connection_config = {'bootstrap.servers': self.__kafka_host}
+        connection_config = {'bootstrap.servers': self.__kafka_hosts}
         client = AdminClient(connection_config)
         return client
 
@@ -134,9 +134,9 @@ class DataCatalogSynchronizer:
             self.__create_tag_factory(), tag_templates_dict)
 
     def __create_entry_factory(self):
+        first_host = self.__kafka_hosts.split(',')[0]
         return self._get_entry_factory()(self.__project_id, self.__location_id,
-                                         self.__kafka_host,
-                                         self.__entry_group_id)
+                                         first_host, self.__entry_group_id)
 
     def __create_tag_factory(self):
         return self._get_tag_factory()()

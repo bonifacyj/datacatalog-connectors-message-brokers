@@ -35,7 +35,7 @@ class MetadataScraper:
 
     def get_metadata(self):
         try:
-            raw_metadata = self._admin_client.list_topics(timeout=20)
+            raw_metadata = self._admin_client.list_topics(timeout=10)
             cluster_metadata = self._get_cluster_metadata(raw_metadata)
             topics_metadata = self._get_topics_metadata(raw_metadata)
             cluster_metadata.update(topics_metadata)
