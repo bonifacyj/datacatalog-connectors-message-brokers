@@ -35,6 +35,7 @@ TBA: widgets
          * [3.1. Run Python entry point](#31-run-python-entry-point)
       * [4. Scripts inside tools](#4-scripts-inside-tools)
          * [4.1. Run clean up](#41-run-clean-up)
+         * [4.2 Generate random metadata for performance testing](#42-generate-random-metadata-for-performance-testing)
       * [5. Developer environment](#5-developer-environment)
          * [5.1. Install and run YAPF formatter](#51-install-and-run-yapf-formatter)
          * [5.2. Install and run Flake8 linter](#52-install-and-run-flake8-linter)
@@ -42,7 +43,6 @@ TBA: widgets
          * [5.4. Run the unit tests](#54-run-the-unit-tests)
       * [6. Metrics](#6-metrics)
       * [7. Troubleshooting](#7-troubleshooting)
-
 
 <!-- tocstop -->
 
@@ -153,6 +153,24 @@ export KAFKA2DC_DATACATALOG_PROJECT_IDS=my-project-1,my-project-2
 python tools/cleanup_datacatalog.py --datacatalog-project-ids=$KAFKA2DC_DATACATALOG_PROJECT_IDS
 
 ```
+
+### 4.2 Generate random metadata for performance testing
+
+You can use tools/metadata-generator.py to generate random topics on a Kafka cluster
+```bash
+# List of bootstrap.servers
+export KAFKA2DC_KAFKA_HOST=kafka_bootstrap_server
+```
+
+The only required argument is --kafka-host, the rest is optional
+
+```bash
+# Run the metadata generator
+python tools/metadata_generator.py --kafka-host=$KAFKA2DC_KAFKA_HOST \
+--number-topics <number of topics to generate, 1000 by default> \
+--max-replication-factor <number> --max-partitions <number> 
+```
+
 
 ## 5. Developer environment
 
