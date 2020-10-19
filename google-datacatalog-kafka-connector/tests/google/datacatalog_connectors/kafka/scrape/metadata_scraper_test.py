@@ -50,3 +50,13 @@ class MetadataScraperTestCase(unittest.TestCase):
             self.__MODULE_PATH, 'test_metadata_one_topic.json')
         self.maxDiff = None
         self.assertEqual(metadata, expected_metadata)
+
+    def test_scrape_cluster_without_topics_should_return_cluster_metadata(
+            self):
+        kafka_admin_client = test_utils.FakeKafkaAdminClientEmptyCluster()
+        scraper = MetadataScraper(kafka_admin_client, self.__HOST)
+        metadata = scraper.get_metadata()
+        expected_metadata = utils.Utils.convert_json_to_object(
+            self.__MODULE_PATH, 'test_metadata_no_topics.json')
+        self.maxDiff = None
+        self.assertEqual(metadata, expected_metadata)

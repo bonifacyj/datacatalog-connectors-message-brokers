@@ -57,7 +57,7 @@ class MetadataScraper:
 
     def _get_topics_metadata(self, metadata_object):
         descriptions = []
-        topic_names = metadata_object.topics.keys()
+        topic_names = list(metadata_object.topics.keys())
         if self._SYSTEM_TOPIC in topic_names:
             topic_names.remove(self._SYSTEM_TOPIC)
         if len(topic_names) == 0:

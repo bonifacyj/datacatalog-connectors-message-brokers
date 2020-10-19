@@ -32,11 +32,24 @@ class FakeDataCatalogEntryFactory(DataCatalogEntryFactory):
         return entry_id, entry
 
 
+class FakeKafkaAdminClientEmptyCluster(mock.MagicMock):
+
+    def list_topics(self, timeout=-1):
+        raw_metadata = ClusterMetadata()
+        raw_metadata.topics = {}
+        raw_metadata.cluster_id = "1234"
+        raw_metadata.brokers = {
+            "testBroker0": BrokerMetadata(),
+            "testBroker1": BrokerMetadata()
+        }
+        return raw_metadata
+
+
 class FakeKafkaAdminClient(mock.MagicMock):
 
     def list_topics(self, timeout=-1):
         '''
-        Mock Consumer returns a description of
+        Mock AdminClient returns a description of
         topic from test_data/test_metadata_one_topic.json
         '''
         test_topic_metadata = TopicMetadata()
@@ -47,7 +60,10 @@ class FakeKafkaAdminClient(mock.MagicMock):
         }
 
         raw_metadata = ClusterMetadata()
-        raw_metadata.topics = {"temperature": test_topic_metadata}
+        raw_metadata.topics = {
+            "temperature": test_topic_metadata,
+            "__consumer_offsets": test_topic_metadata
+        }
         raw_metadata.cluster_id = "1234"
         raw_metadata.brokers = {
             "testBroker0": BrokerMetadata(),
