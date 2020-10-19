@@ -55,6 +55,8 @@ class MetadataScraper:
 
     def _get_topics_metadata(self, metadata_object):
         topic_names = metadata_object.topics.keys()
+        if len(topic_names) == 0:
+            raise ValueError('There are no topics in the given cluster')
         descriptions = []
         config_resources = [
             ConfigResource(confluent_kafka.admin.RESOURCE_TOPIC, topic_name)
