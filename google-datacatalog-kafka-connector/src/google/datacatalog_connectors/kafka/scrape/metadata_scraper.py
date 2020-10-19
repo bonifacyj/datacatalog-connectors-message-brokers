@@ -122,18 +122,27 @@ class MetadataScraper:
         return topic_retention_config
 
     def _get_topic_compaction_config(self, config):
-        min_compaction_lag = config['min.compaction.lag.ms'].value
-        max_compaction_lag = config['max.compaction.lag.ms'].value
-        topic_compaction_config = {
-            MetadataConstants.MIN_COMPACTION_LAG:
-                int(min_compaction_lag),
-            MetadataConstants.MIN_COMPACTION_LAG_TEXT:
-                MetadataValuesConverter.get_human_readable_duration_value(
-                    min_compaction_lag),
-            MetadataConstants.MAX_COMPACTION_LAG:
-                int(max_compaction_lag),
-            MetadataConstants.MAX_COMPACTION_LAG_TEXT:
-                MetadataValuesConverter.get_human_readable_duration_value(
-                    max_compaction_lag)
-        }
+        topic_compaction_config = {}
+        min_compaction_lag_entry = config.get('min.compaction.lag.ms')
+        if min_compaction_lag_entry is not None:
+            min_compaction_lag = config['min.compaction.lag.ms'].value
+            topic_compaction_config.update({
+                MetadataConstants.MIN_COMPACTION_LAG:
+                    int(min_compaction_lag),
+                MetadataConstants.MIN_COMPACTION_LAG_TEXT:
+                    MetadataValuesConverter.get_human_readable_duration_value(
+                        min_compaction_lag)
+            })
+
+        max_compaction_lag_entry = config.get('max.compaction.lag.ms')
+        if max_compaction_lag_entry is not None:
+            max_compaction_lag = config['max.compaction.lag.ms'].value
+            topic_compaction_config.update({
+                MetadataConstants.MAX_COMPACTION_LAG:
+                    int(max_compaction_lag),
+                MetadataConstants.MAX_COMPACTION_LAG_TEXT:
+                    MetadataValuesConverter.get_human_readable_duration_value(
+                        max_compaction_lag)
+            })
+
         return topic_compaction_config
