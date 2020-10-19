@@ -1,7 +1,9 @@
+import confluent_kafka
 import mock
 from google.cloud import datacatalog_v1beta1
 from confluent_kafka.admin import ClusterMetadata, \
-    TopicMetadata, BrokerMetadata
+    TopicMetadata, BrokerMetadata, PartitionMetadata,\
+    ConfigEntry, ConfigResource
 from google.datacatalog_connectors.kafka.prepare.\
     datacatalog_entry_factory import DataCatalogEntryFactory
 
@@ -14,20 +16,36 @@ class FakeDataCatalogEntryFactory(DataCatalogEntryFactory):
         return entry_id, entry
 
 
-class FakeKafkaConsumer(mock.MagicMock):
+class FakeKafkaAdminClient(mock.MagicMock):
 
     def list_topics(self, timeout=-1):
-        raw_metadata = ClusterMetadata()
-        raw_metadata.topics = {
-            "testTopic0": TopicMetadata(),
-            "testTopic1": TopicMetadata()
+        '''
+        Mock Consumer returns a description of
+        topic from test_data/test_metadata_one_topic.json
+        '''
+        test_topic_metadata = TopicMetadata()
+        test_topic_metadata.partitions = {
+            0: PartitionMetadata(),
+            1: PartitionMetadata(),
+            2: PartitionMetadata()
         }
-        raw_metadata.cluster_id = "TestClusterID"
+
+        raw_metadata = ClusterMetadata()
+        raw_metadata.topics = {"temperature": test_topic_metadata}
+        raw_metadata.cluster_id = "1234"
         raw_metadata.brokers = {
             "testBroker0": BrokerMetadata(),
             "testBroker1": BrokerMetadata()
         }
         return raw_metadata
+
+    def describe_configs(self, config_resources, request_timeout=10):
+        resource = ConfigResource(confluent_kafka.admin.RESOURCE_TOPIC,
+                                  'temperature')
+        fake_future = mock.MagicMock()
+        fake_future.result.return_value = get_mock_config_description()
+        config_futures = {resource: fake_future}
+        return config_futures
 
 
 def mock_parse_args():
@@ -79,3 +97,19 @@ def get_test_cluster_entry():
     entry.name = 'mocked_entry_path'
     entry.linked_resource = '//metadata_host//1234'
     return entry
+
+
+def get_mock_config_description():
+    config_desc = {
+        'cleanup.policy':
+            ConfigEntry('cleanup.policy', 'delete, compact'),
+        'retention.ms':
+            ConfigEntry('retention.ms', '172800000'),
+        'retention.bytes':
+            ConfigEntry('retention.bytes', '12'),
+        'min.compaction.lag.ms':
+            ConfigEntry('min.compaction.lag.ms', '200'),
+        'max.compaction.lag.ms':
+            ConfigEntry('max.compaction.lag.ms', '9223372036854775807')
+    }
+    return config_desc

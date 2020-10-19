@@ -17,6 +17,7 @@
 from .assembled_entry_factory import AssembledEntryFactory
 from .datacatalog_entry_factory import DataCatalogEntryFactory
 from .datacatalog_tag_template_factory import DataCatalogTagTemplateFactory
+from .datacatalog_tag_factory import DataCatalogTagFactory
 
 __all__ = ('AssembledEntryFactory', 'DataCatalogEntryFactory',
-           'DataCatalogTagTemplateFactory')
+           'DataCatalogTagTemplateFactory', 'DataCatalogTagFactory')

@@ -21,14 +21,14 @@ class DataCatalogEntryFactory(BaseEntryFactory):
          :param topic: name of a Kafka topic
          :return: entry_id, entry
         """
-
-        entry_id = self._format_id(topic)
+        topic_name = topic[MetadataConstants.TOPIC_NAME]
+        entry_id = self._format_id(topic_name)
         entry = datacatalog_v1beta1.types.Entry()
 
         entry.user_specified_type = 'kafka_topic'
         entry.user_specified_system = self.__entry_group_id
 
-        entry.display_name = self._format_display_name(topic)
+        entry.display_name = self._format_display_name(topic_name)
 
         entry.name = datacatalog_v1beta1.DataCatalogClient.entry_path(
             self.__project_id, self.__location_id, self.__entry_group_id,

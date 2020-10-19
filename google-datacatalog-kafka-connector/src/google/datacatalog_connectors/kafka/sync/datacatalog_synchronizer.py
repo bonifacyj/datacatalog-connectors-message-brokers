@@ -1,7 +1,7 @@
 import logging
 import uuid
 
-from confluent_kafka import Consumer
+from confluent_kafka.admin import AdminClient
 
 from google.datacatalog_connectors.commons.cleanup \
     import datacatalog_metadata_cleaner
@@ -41,15 +41,17 @@ class DataCatalogSynchronizer:
         self._before_run()
         logging.info('\n\n==============Scrape metadata===============')
 
-        consumer = self._create_consumer()
-        metadata = self.__metadata_scraper(consumer).get_metadata()
+        client = self._create_client()
+        metadata = self.__metadata_scraper(client,
+                                           self.__kafka_host).get_metadata()
 
         self._log_metadata(metadata)
 
         logging.info('\n\n==============Prepare metadata===============')
 
         tag_templates = self.__create_tag_templates()
-        prepared_entries = self.__prepare_datacatalog_entries(metadata)
+        prepared_entries = self.__prepare_datacatalog_entries(
+            metadata, tag_templates)
 
         self._log_entries(prepared_entries)
 
@@ -65,12 +67,14 @@ class DataCatalogSynchronizer:
 
         return self.__task_id
 
-    def _create_consumer(self):
-        consumer = Consumer(self.__connection_config)
-        return consumer
+    def _create_client(self):
+        connection_config = {'bootstrap.servers': self.__kafka_host}
+        client = AdminClient(connection_config)
+        return client
 
-    def __prepare_datacatalog_entries(self, metadata):
-        entry_factory = self.__create_assembled_entry_factory()
+    def __prepare_datacatalog_entries(self, metadata, tag_templates_dict):
+        entry_factory = self.__create_assembled_entry_factory(
+            tag_templates_dict)
         prepared_entries = entry_factory. \
             make_entries_from_cluster_metadata(
                 metadata)
@@ -108,14 +112,18 @@ class DataCatalogSynchronizer:
         return tag_templates_dict
 
     # Create factories
-    def __create_assembled_entry_factory(self):
+    def __create_assembled_entry_factory(self, tag_templates_dict):
         return self._get_assembled_entry_factory()(
-            self.__entry_group_id, self.__create_entry_factory())
+            self.__entry_group_id, self.__create_entry_factory(),
+            self.__create_tag_factory(), tag_templates_dict)
 
     def __create_entry_factory(self):
         return self._get_entry_factory()(self.__project_id, self.__location_id,
                                          self.__kafka_host,
                                          self.__entry_group_id)
+
+    def __create_tag_factory(self):
+        return self._get_tag_factory()()
 
     # Begin extension methods
     def _before_run(self):
@@ -147,3 +155,7 @@ class DataCatalogSynchronizer:
     def _get_tag_template_factory(cls):
         return prepare.datacatalog_tag_template_factory. \
             DataCatalogTagTemplateFactory
+
+    @classmethod
+    def _get_tag_factory(cls):
+        return prepare.datacatalog_tag_factory.DataCatalogTagFactory
