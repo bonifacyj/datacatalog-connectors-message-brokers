@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import re
+
 from google.cloud import datacatalog_v1beta1
 from google.datacatalog_connectors.commons.prepare.base_entry_factory import \
     BaseEntryFactory
@@ -38,7 +40,8 @@ class DataCatalogEntryFactory(BaseEntryFactory):
          :return: entry_id, entry
         """
         topic_name = topic[MetadataConstants.TOPIC_NAME]
-        entry_id = self._format_id(topic_name)
+        entry_id = self._create_valid_entry_id(topic_name)
+        formatted_name = self._format_id(topic_name)
         entry = datacatalog_v1beta1.types.Entry()
 
         entry.user_specified_type = 'kafka_topic'
@@ -51,7 +54,7 @@ class DataCatalogEntryFactory(BaseEntryFactory):
             entry_id)
 
         entry.linked_resource = '//{}//{}'.format(self.__metadata_host_server,
-                                                  entry_id)
+                                                  formatted_name)
 
         return entry_id, entry
 
@@ -62,7 +65,8 @@ class DataCatalogEntryFactory(BaseEntryFactory):
         :return: entry_id, entry
         """
         cluster_id = metadata[MetadataConstants.CLUSTER_ID]
-        entry_id = self._format_id(cluster_id)
+        entry_id = self._create_valid_entry_id(cluster_id)
+        formatted_id = self._format_id(cluster_id)
         entry = datacatalog_v1beta1.types.Entry()
 
         entry.user_specified_type = 'kafka_cluster'
@@ -76,6 +80,19 @@ class DataCatalogEntryFactory(BaseEntryFactory):
             entry_id)
 
         entry.linked_resource = '//{}//{}'.format(self.__metadata_host_server,
-                                                  entry_id)
+                                                  formatted_id)
 
         return entry_id, entry
+
+    def _create_valid_entry_id(self, asset_name):
+        """
+        DC entry ID cannot start from anything other than
+        an underscore or a letter. This method makes sure this
+        requirement is met
+        :return: entry_id
+        """
+        invalid_id = re.compile('^[^a-zA-Z_]+.*$')
+        if invalid_id.search(asset_name):
+            asset_name = '_' + asset_name
+        entry_id = self._format_id(asset_name)
+        return entry_id

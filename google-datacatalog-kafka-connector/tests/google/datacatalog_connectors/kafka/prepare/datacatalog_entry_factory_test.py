@@ -17,6 +17,7 @@
 import os
 import unittest
 import mock
+import re
 
 from google.datacatalog_connectors.commons_test import utils
 from google.datacatalog_connectors.kafka.prepare.\
@@ -34,6 +35,7 @@ class DataCatalogEntryFactoryTestCase(unittest.TestCase):
     __MOCKED_ENTRY_PATH = 'mocked_entry_path'
     __METADATA_SERVER_HOST = 'metadata_host'
     __MODULE_PATH = os.path.dirname(os.path.abspath(__file__))
+    __INVALID_ID = '^[^a-zA-Z_]+.*$'
 
     def setUp(self):
         self.__entry_factory = DataCatalogEntryFactory(
@@ -69,3 +71,27 @@ class DataCatalogEntryFactoryTestCase(unittest.TestCase):
         self.assertEqual(str(entry),
                          str(expected_entry),
                          msg='Entry fields are not the same')
+
+    def test_prefix_cluster_entry_ids_if_beginning_invalid(self, entry_path):
+        entry_path.return_value = \
+            DataCatalogEntryFactoryTestCase.__MOCKED_ENTRY_PATH
+        metadata = utils.Utils.convert_json_to_object(
+            self.__MODULE_PATH, 'test_metadata_one_topic.json')
+        entry_id, entry = self.__entry_factory.make_entry_for_cluster(metadata)
+        invalid_id_regex = re.compile(self.__INVALID_ID)
+        self.assertNotRegex(entry_id, invalid_id_regex)
+
+    def test_prefix_topic_entry_ids_if_beginning_invalid(self, entry_path):
+        entry_path.return_value = \
+            DataCatalogEntryFactoryTestCase.__MOCKED_ENTRY_PATH
+        metadata = utils.Utils.convert_json_to_object(
+            self.__MODULE_PATH, 'test_metadata_one_topic.json')
+        metadata[MetadataConstants.TOPICS] = [{
+            MetadataConstants.TOPIC_NAME: '1234_topic_name'
+        }]
+        topics = metadata[MetadataConstants.TOPICS]
+
+        for topic in topics:
+            entry_id, entry = self.__entry_factory.make_entry_for_topic(topic)
+            invalid_id_regex = re.compile(self.__INVALID_ID)
+            self.assertNotRegex(entry_id, invalid_id_regex)
