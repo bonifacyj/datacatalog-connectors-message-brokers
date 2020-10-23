@@ -63,7 +63,8 @@ class DatacatalogCli():
             'url': args.schema_registry_url,
             'ssl.ca.location': args.schema_registry_ssl_ca_location,
             'ssl.certificate.location': args.schema_registry_ssl_cert_location,
-            'ssl.key.location': args.schema_registry_ssl_key_location
+            'ssl.key.location': args.schema_registry_ssl_key_location,
+            'basic.auth.user.info': args.schema_registry_auth_user_info
         }
         provided_connection_args = {
             arg: arg_value
@@ -94,17 +95,19 @@ class DatacatalogCli():
                             help='Your kafka server host',
                             required=True)
         parser.add_argument('--schema-registry-url',
-                            help='Url to connect to the schema registry')
-        parser.add_argument(
-            '--schema-registry-ssl-ca-location',
-            help='File or directory path to CA '
-            'certificate(s) for verifying the Schema Registry key')
+                            help='Url to connect to the Schema Registry')
+        parser.add_argument('--schema-registry-ssl-ca-location',
+                            help='Path to CA certificate file used to verify '
+                            'the Schema Registry’s private key.')
         parser.add_argument('--schema-registry-ssl-cert-location',
-                            help='Path to client\'s public key '
-                            'used for Schema Registry authentication')
+                            help='Path to client’s public key (PEM) '
+                            'used for authentication.')
         parser.add_argument('--schema-registry-ssl-key-location',
-                            help='Path to client\'s private key '
-                            'used for Schema Registry authentication')
+                            help='Path to client’s private key (PEM) '
+                            'used for authentication.')
+        parser.add_argument('--schema-registry-auth-user-info',
+                            help='Client HTTP credentials in the form of '
+                            'username:password for the Schema Registry')
         parser.add_argument('--service-account-path',
                             help='Local Service Account path '
                             '(Can be suplied as '

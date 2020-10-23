@@ -31,3 +31,5 @@ class MetadataConstants:
     MAX_COMPACTION_LAG = "max_compaction_lag"
     MAX_COMPACTION_LAG_TEXT = "max_compaction_lag_text"
     BOOTSTRAP_SERVER = "bootstrap_server"
+    TOPIC_KEY_SCHEMA = "topic_key_schema"
+    TOPIC_VALUE_SCHEMA = "topic_value_schema"

@@ -18,8 +18,8 @@ import logging
 import uuid
 
 from confluent_kafka.admin import AdminClient
-from confluent_kafka.avro.cached_schema_registry_client \
-    import CachedSchemaRegistryClient
+from confluent_kafka.schema_registry.schema_registry_client \
+    import SchemaRegistryClient
 
 from google.datacatalog_connectors.commons.cleanup \
     import datacatalog_metadata_cleaner
@@ -95,7 +95,7 @@ class DataCatalogSynchronizer:
     def _create_schema_registry_client(self):
         client = None
         if self.__schema_registry_conf is not None:
-            client = CachedSchemaRegistryClient(self.__schema_registry_conf)
+            client = SchemaRegistryClient(self.__schema_registry_conf)
         return client
 
     def __prepare_datacatalog_entries(self, metadata, tag_templates_dict):

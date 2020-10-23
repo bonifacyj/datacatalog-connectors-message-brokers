@@ -87,17 +87,6 @@ class MetadataScraper:
         topic_metadata = {MetadataConstants.TOPICS: descriptions}
         return topic_metadata
 
-    def _get_value_schema_for_topic(self, topic_name):
-        subject_value = topic_name + '-value'
-        schema = self._schema_registry_client.get_latest_schema(
-            subject_value)[1]
-        return schema
-
-    def _get_key_schema_for_topic(self, topic_name):
-        subject_key = topic_name + '-key'
-        schema = self._schema_registry_client.get_latest_schema(subject_key)[1]
-        return schema
-
     def _assemble_topic_metadata(self, topic_name, raw_metadata, config_desc):
         num_partitions = len(raw_metadata.topics[topic_name].partitions)
         cleanup_policy = config_desc['cleanup.policy'].value
@@ -114,6 +103,7 @@ class MetadataScraper:
         if 'compact' in cleanup_policy:
             topic_description.update(
                 self._get_topic_compaction_config(config_desc))
+        topic_description.update(self._get_topic_schemas(topic_name))
         return topic_description
 
     def _get_topic_retention_config(self, config):
@@ -163,3 +153,18 @@ class MetadataScraper:
             })
 
         return topic_compaction_config
+
+    def _get_topic_schemas(self, topic_name):
+        topic_schemas = {}
+        subject_value = topic_name + '-value'
+        subject_key = topic_name + '-key'
+        subjects = self._schema_registry_client.get_subjects()
+        if subject_value in subjects:
+            value_schema = self._schema_registry_client.get_latest_version(
+                subject_value).schema.schema_str
+            topic_schemas[MetadataConstants.TOPIC_VALUE_SCHEMA] = value_schema
+        if subject_key in subjects:
+            key_schema = self._schema_registry_client.get_latest_version(
+                subject_key).schema.schema_str
+            topic_schemas[MetadataConstants.TOPIC_KEY_SCHEMA] = key_schema
+        return topic_schemas
