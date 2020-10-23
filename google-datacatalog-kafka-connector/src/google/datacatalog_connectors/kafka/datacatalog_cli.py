@@ -42,8 +42,9 @@ class DatacatalogCli():
             location_id=args.datacatalog_location_id,
             entry_group_id=self._get_entry_group_id(args),
             kafka_hosts=self._get_host_arg(args),
-            connection_config=self._get_connection_config(args),
             metadata_scraper=self._get_metadata_scraper(),
+            schema_registry_conf=self._get_schema_registry_connection_config(
+                args),
             enable_monitoring=args.enable_monitoring).run()
 
     def _get_datacatalog_synchronizer(self):
@@ -55,9 +56,21 @@ class DatacatalogCli():
     def _get_host_arg(self, args):
         return args.kafka_host
 
-    def _get_connection_config(self, args):
-        group_id = args.group_id or 'kafka2dc'
-        return {'bootstrap.servers': args.kafka_host, 'group.id': group_id}
+    def _get_schema_registry_connection_config(self, args):
+        if args.schema_registry_url is None:
+            return None
+        connection_args = {
+            'url': args.schema_registry_url,
+            'ssl.ca.location': args.schema_registry_ssl_ca_location,
+            'ssl.certificate.location': args.schema_registry_ssl_cert_location,
+            'ssl.key.location': args.schema_registry_ssl_key_location
+        }
+        provided_connection_args = {
+            arg: arg_value
+            for arg, arg_value in connection_args.items()
+            if arg_value is not None
+        }
+        return provided_connection_args
 
     def _get_entry_group_id(self, args):
         return args.datacatalog_entry_group_id or 'kafka'
@@ -80,8 +93,18 @@ class DatacatalogCli():
         parser.add_argument('--kafka-host',
                             help='Your kafka server host',
                             required=True)
-        parser.add_argument('--group-id',
-                            help='Group.id parameter for a Kafka consumer')
+        parser.add_argument('--schema-registry-url',
+                            help='Url to connect to the schema registry')
+        parser.add_argument(
+            '--schema-registry-ssl-ca-location',
+            help='File or directory path to CA '
+            'certificate(s) for verifying the Schema Registry key')
+        parser.add_argument('--schema-registry-ssl-cert-location',
+                            help='Path to client\'s public key '
+                            'used for Schema Registry authentication')
+        parser.add_argument('--schema-registry-ssl-key-location',
+                            help='Path to client\'s private key '
+                            'used for Schema Registry authentication')
         parser.add_argument('--service-account-path',
                             help='Local Service Account path '
                             '(Can be suplied as '

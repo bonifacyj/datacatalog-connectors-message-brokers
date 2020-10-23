@@ -29,9 +29,10 @@ class MetadataScraper:
 
     _SYSTEM_TOPIC = '__consumer_offsets'
 
-    def __init__(self, client, bootstrap_server):
-        self._admin_client = client
+    def __init__(self, bootstrap_server, client, schema_registry_client=None):
         self._bootstrap_server = bootstrap_server
+        self._admin_client = client
+        self._schema_registry_client = schema_registry_client
 
     def get_metadata(self):
         try:
@@ -85,6 +86,11 @@ class MetadataScraper:
                 len(descriptions), end_describing - start_describing))
         topic_metadata = {MetadataConstants.TOPICS: descriptions}
         return topic_metadata
+
+    def _get_schema_for_topic(self, topic_name):
+        subject_value = topic_name + '-value'
+        subject_key = topic_name + '-key'
+        # TODO
 
     def _assemble_topic_metadata(self, topic_name, raw_metadata, config_desc):
         num_partitions = len(raw_metadata.topics[topic_name].partitions)

@@ -87,8 +87,8 @@ class DatacatalogSynchronizerTestCase(unittest.TestCase):
             DatacatalogSynchronizerTestCase.__LOCATION_ID,
             DatacatalogSynchronizerTestCase.__ENTRY_GROUP_ID,
             DatacatalogSynchronizerTestCase.__HOST,
-            connection_config,
             MetadataScraper,
+            connection_config,
             enable_monitoring=True)
 
         synchronizer.run()
