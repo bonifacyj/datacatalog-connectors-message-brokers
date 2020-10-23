@@ -87,10 +87,16 @@ class MetadataScraper:
         topic_metadata = {MetadataConstants.TOPICS: descriptions}
         return topic_metadata
 
-    def _get_schema_for_topic(self, topic_name):
+    def _get_value_schema_for_topic(self, topic_name):
         subject_value = topic_name + '-value'
+        schema = self._schema_registry_client.get_latest_schema(
+            subject_value)[1]
+        return schema
+
+    def _get_key_schema_for_topic(self, topic_name):
         subject_key = topic_name + '-key'
-        # TODO
+        schema = self._schema_registry_client.get_latest_schema(subject_key)[1]
+        return schema
 
     def _assemble_topic_metadata(self, topic_name, raw_metadata, config_desc):
         num_partitions = len(raw_metadata.topics[topic_name].partitions)
