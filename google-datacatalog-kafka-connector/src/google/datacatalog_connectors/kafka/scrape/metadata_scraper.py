@@ -103,7 +103,8 @@ class MetadataScraper:
         if 'compact' in cleanup_policy:
             topic_description.update(
                 self._get_topic_compaction_config(config_desc))
-        topic_description.update(self._get_topic_schemas(topic_name))
+        if self._schema_registry_client is not None:
+            topic_description.update(self._get_topic_schemas(topic_name))
         return topic_description
 
     def _get_topic_retention_config(self, config):

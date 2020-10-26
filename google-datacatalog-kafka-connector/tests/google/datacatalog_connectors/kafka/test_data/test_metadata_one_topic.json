@@ -14,7 +14,9 @@
       "min_compaction_lag_text": "200.0ms",
       "max_compaction_lag": 9223372036854775807,
       "max_compaction_lag_text": "292471208y 247d 7h 12min 55sec 807.0ms",
-      "cleanup_policy": "delete, compact"
+      "cleanup_policy": "delete, compact",
+      "topic_key_schema": "{\"type\":\"record\",\"name\":\"updates\", \"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"degrees\",\"type\":\"double\"}]}",
+      "topic_value_schema": "{\"type\":\"record\",\"name\":\"updates\", \"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"degrees\",\"type\":\"double\"}]}"
     }
   ]
 }

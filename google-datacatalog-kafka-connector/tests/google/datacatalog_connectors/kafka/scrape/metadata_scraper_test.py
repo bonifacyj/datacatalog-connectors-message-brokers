@@ -30,9 +30,21 @@ class MetadataScraperTestCase(unittest.TestCase):
     __HOST = 'fake_host'
     __MODULE_PATH = os.path.dirname(os.path.abspath(__file__))
 
-    def test_scrape_metadata_with_credentials_should_return_objects(self):
+    def test_scrape_metadata_without_schema_registry_should_return_objects(
+            self):
         kafka_admin_client = test_utils.FakeKafkaAdminClient()
-        scraper = MetadataScraper(self.__HOST, kafka_admin_client)
+        scraper = MetadataScraper(self.__HOST,
+                                  kafka_admin_client,
+                                  schema_registry_client=None)
+        metadata = scraper.get_metadata()
+        self.assertGreater(len(metadata), 0)
+
+    def test_scrape_metadata_with_schema_registry_should_return_objects(self):
+        kafka_admin_client = test_utils.FakeKafkaAdminClient()
+        kafka_schema_registry_client = test_utils.\
+            FakeKafkaSchemaRegistryClient()
+        scraper = MetadataScraper(self.__HOST, kafka_admin_client,
+                                  kafka_schema_registry_client)
         metadata = scraper.get_metadata()
         self.assertGreater(len(metadata), 0)
 
@@ -44,7 +56,10 @@ class MetadataScraperTestCase(unittest.TestCase):
 
     def test_scrape_metadata_should_describe_all_fields(self):
         kafka_admin_client = test_utils.FakeKafkaAdminClient()
-        scraper = MetadataScraper(self.__HOST, kafka_admin_client)
+        kafka_schema_registry_client = test_utils.\
+            FakeKafkaSchemaRegistryClient()
+        scraper = MetadataScraper(self.__HOST, kafka_admin_client,
+                                  kafka_schema_registry_client)
         metadata = scraper.get_metadata()
         expected_metadata = utils.Utils.convert_json_to_object(
             self.__MODULE_PATH, 'test_metadata_one_topic.json')
