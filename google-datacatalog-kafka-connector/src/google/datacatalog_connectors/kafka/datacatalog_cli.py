@@ -59,8 +59,9 @@ class DatacatalogCli():
     def _get_schema_registry_connection_config(self, args):
         if args.schema_registry_url is None:
             return None
+        url = self._normalize_schema_registry_url(args.schema_registry_url)
         connection_args = {
-            'url': args.schema_registry_url,
+            'url': url,
             'ssl.ca.location': args.schema_registry_ssl_ca_location,
             'ssl.certificate.location': args.schema_registry_ssl_cert_location,
             'ssl.key.location': args.schema_registry_ssl_key_location,
@@ -72,6 +73,11 @@ class DatacatalogCli():
             if arg_value is not None
         }
         return provided_connection_args
+
+    def _normalize_schema_registry_url(self, url):
+        if not url.startswith('http'):
+            return "".join(['http://', url])
+        return url
 
     def _get_entry_group_id(self, args):
         return args.datacatalog_entry_group_id or 'kafka'

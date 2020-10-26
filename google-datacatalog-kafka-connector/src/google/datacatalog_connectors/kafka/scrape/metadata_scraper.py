@@ -170,13 +170,20 @@ class MetadataScraper:
         topic_schemas = {}
         subject_value = topic_name + '-value'
         subject_key = topic_name + '-key'
-        subjects = self._schema_registry_client.get_subjects()
-        if subject_value in subjects:
-            value_schema = self._schema_registry_client.get_latest_version(
-                subject_value).schema.schema_str
-            topic_schemas[MetadataConstants.TOPIC_VALUE_SCHEMA] = value_schema
-        if subject_key in subjects:
-            key_schema = self._schema_registry_client.get_latest_version(
-                subject_key).schema.schema_str
-            topic_schemas[MetadataConstants.TOPIC_KEY_SCHEMA] = key_schema
+        try:
+            subjects = self._schema_registry_client.get_subjects()
+            if subject_value in subjects:
+                value_schema = self._schema_registry_client.get_latest_version(
+                    subject_value).schema.schema_str
+                topic_schemas[
+                    MetadataConstants.TOPIC_VALUE_SCHEMA] = value_schema
+            if subject_key in subjects:
+                key_schema = self._schema_registry_client.get_latest_version(
+                    subject_key).schema.schema_str
+                topic_schemas[MetadataConstants.TOPIC_KEY_SCHEMA] = key_schema
+        except (ValueError, TypeError) as e:
+            logging.error("Failed to pull information about topic {} "
+                          "from the Schema Registry: {}".format(topic_name, e))
+            raise
+
         return topic_schemas
