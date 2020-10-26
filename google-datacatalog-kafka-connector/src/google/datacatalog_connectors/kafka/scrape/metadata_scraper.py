@@ -27,8 +27,6 @@ from .metadata_values_converter import MetadataValuesConverter
 
 class MetadataScraper:
 
-    _SYSTEM_TOPIC = '__consumer_offsets'
-
     def __init__(self, bootstrap_server, client, schema_registry_client=None):
         self._bootstrap_server = bootstrap_server
         self._admin_client = client

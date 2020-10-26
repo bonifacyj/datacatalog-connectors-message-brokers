@@ -126,9 +126,32 @@ export KAFKA2DC_KAFKA_HOST=kafka_bootstrap_server
 
 ```
 
+Export below variables to enable optional ingestion of the schemas from the Schema Registry. 
+The url is required, the rest depends on your Schema Registry authentication setup.
+
+```bash
+# Required to connect to the Schema Registry
+
+export KAFKA2DC_SCHEMA_REGISTRY_URL=url/to/schema/registry
+
+# All the following are optional and depend on your Schema Registry authentication setup
+
+export KAFKA2DC_SCHEMA_REGISTRY_SSL_CA_LOCATION=path_to_CA_certificate_file
+export KAFKA2DC_SCHEMA_REGISTRY_SSL_CERT_LOCATION=path_to_public_key
+export KAFKA2DC_SCHEMA_REGISTRY_SSL_KEY_LOCATION=path_to_private_key
+
+# Client HTTP credentials in the form of username:password for the Schema Registry
+
+export KAFKA2DC_SCHEMA_REGISTRY_AUTH_USER_INFO=username:password
+```
+
 ## 3. Run entry point
 
 ### 3.1. Run Python entry point
+
+Arguments related to the Schema Registry are optional and should be provided only if you want the schema data to be
+ingested in the Data Catalog. In this case, --schema-registry-url is required, the rest depends on your 
+authentication setup.
 
 - Virtualenv
 
@@ -136,7 +159,14 @@ export KAFKA2DC_KAFKA_HOST=kafka_bootstrap_server
 google-datacatalog-kafka-connector \
 --datacatalog-project-id=$KAFKA2DC_DATACATALOG_PROJECT_ID \
 --datacatalog-location-id=$KAFKA2DC_DATACATALOG_LOCATION_ID \
---kafka-host=$KAFKA2DC_KAFKA_HOST
+--kafka-host=$KAFKA2DC_KAFKA_HOST \
+--schema-registry-url=$KAFKA2DC_SCHEMA_REGISTRY_URL \
+--schema-registry-ssl-ca-location=$KAFKA2DC_SCHEMA_REGISTRY_SSL_CA_LOCATION \
+--schema-registry-ssl-cert-location=$KAFKA2DC_SCHEMA_REGISTRY_SSL_CERT_LOCATION \
+--schema-registry-ssl-key-location=$KAFKA2DC_SCHEMA_REGISTRY_SSL_KEY_LOCATION \
+--schema-registry-auth-user-info=$KAFKA2DC_SCHEMA_REGISTRY_AUTH_USER_INFO \
+--service-account-path=$GOOGLE_APPLICATION_CREDENTIALS
+
 ```
 
 ## 4. Scripts inside tools
