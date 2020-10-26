@@ -78,4 +78,12 @@ class DataCatalogTagFactory:
             tag.fields[template_fields.max_compaction_lag_as_text.
                        name].string_value = topic_metadata.get(
                            MetadataConstants.MAX_COMPACTION_LAG_TEXT)
+        key_schema = topic_metadata.get(MetadataConstants.TOPIC_KEY_SCHEMA)
+        if key_schema:
+            tag.fields[
+                template_fields.key_schema.name].string_value = key_schema
+        value_schema = topic_metadata.get(MetadataConstants.TOPIC_VALUE_SCHEMA)
+        if value_schema:
+            tag.fields[
+                template_fields.value_schema.name].string_value = value_schema
         return tag
