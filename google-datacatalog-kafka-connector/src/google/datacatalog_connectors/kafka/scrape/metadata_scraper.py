@@ -59,14 +59,16 @@ class MetadataScraper:
     def _get_topics_metadata(self, metadata_object):
         descriptions = []
         topic_names = list(metadata_object.topics.keys())
-        if self._SYSTEM_TOPIC in topic_names:
-            topic_names.remove(self._SYSTEM_TOPIC)
-        if len(topic_names) == 0:
+        user_topics = [
+            topic_name for topic_name in topic_names
+            if not self._is_system_topic(topic_name)
+        ]
+        if len(user_topics) == 0:
             logging.warning('There are no topics in the given cluster.')
         else:
             config_resources = [
                 ConfigResource(confluent_kafka.admin.RESOURCE_TOPIC,
-                               topic_name) for topic_name in topic_names
+                               topic_name) for topic_name in user_topics
             ]
             config_futures = self._admin_client.describe_configs(
                 config_resources, request_timeout=10)
@@ -86,6 +88,17 @@ class MetadataScraper:
                 len(descriptions), end_describing - start_describing))
         topic_metadata = {MetadataConstants.TOPICS: descriptions}
         return topic_metadata
+
+    def _is_system_topic(self, topic_name):
+        """
+        Assumes that topic names follow the convention:
+        all topics starting with underscore are system topics
+        :param topic_name: str
+        :return: bool
+        """
+        if topic_name.startswith('_'):
+            return True
+        return False
 
     def _assemble_topic_metadata(self, topic_name, raw_metadata, config_desc):
         num_partitions = len(raw_metadata.topics[topic_name].partitions)
