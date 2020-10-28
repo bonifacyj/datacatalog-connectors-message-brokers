@@ -128,6 +128,7 @@ export KAFKA2DC_KAFKA_HOST=kafka_bootstrap_server
 
 Export below variables to enable optional ingestion of the schemas from the Schema Registry. 
 The url is required, the rest depends on your Schema Registry authentication setup.
+Example of the Schema Registry url: http://localhost:8081.
 
 ```bash
 # Required to connect to the Schema Registry
