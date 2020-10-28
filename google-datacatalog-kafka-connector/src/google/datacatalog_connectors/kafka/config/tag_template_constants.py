@@ -93,11 +93,11 @@ class TagTemplateConstants:
             self.consumer_groups = TagTemplateField(
                 'consumer_groups', 'Consumer groups',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.key_schema = TagTemplateField(
-                'key_schema', 'Key schema',
+            self.physical_schema_key = TagTemplateField(
+                'physical_schema_key', 'Key physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.value_schema = TagTemplateField(
-                'value_schema', 'Value schema',
+            self.physical_schema_value = TagTemplateField(
+                'physical_schema_value', 'Value physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
 
 

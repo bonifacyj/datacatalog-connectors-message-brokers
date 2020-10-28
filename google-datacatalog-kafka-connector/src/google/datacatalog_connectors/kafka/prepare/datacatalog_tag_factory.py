@@ -81,9 +81,9 @@ class DataCatalogTagFactory:
         key_schema = topic_metadata.get(MetadataConstants.TOPIC_KEY_SCHEMA)
         if key_schema:
             tag.fields[
-                template_fields.key_schema.name].string_value = key_schema
+                template_fields.physical_schema_key.name].string_value = key_schema
         value_schema = topic_metadata.get(MetadataConstants.TOPIC_VALUE_SCHEMA)
         if value_schema:
             tag.fields[
-                template_fields.value_schema.name].string_value = value_schema
+                template_fields.physical_schema_value.name].string_value = value_schema
         return tag
