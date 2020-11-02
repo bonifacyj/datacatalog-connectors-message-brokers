@@ -96,22 +96,22 @@ class TagTemplateConstants:
             self.topic_keys_physical_schema = TagTemplateField(
                 'physical_schema_topic_keys', 'Topic-Key physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.topic_keys_schema_type = TagTemplateField(
+            self.topic_keys_physical_schema_type = TagTemplateField(
                 'schema_type_topic_keys',
                 'Type of the physical schema of topic keys',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.topic_keys_schema_version = TagTemplateField(
+            self.topic_keys_physical_schema_version = TagTemplateField(
                 'schema_version_topic_keys',
                 'Version of the physical schema of topic keys',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
             self.topic_values_physical_schema = TagTemplateField(
                 'physical_schema_topic_values', 'Topic-Value physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.topic_values_schema_type = TagTemplateField(
+            self.topic_values_physical_schema_type = TagTemplateField(
                 'schema_type_topic_values',
                 'Type of the physical schema of topic values',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.topic_values_schema_version = TagTemplateField(
+            self.topic_values_physical_schema_version = TagTemplateField(
                 'schema_version_topic_values',
                 'Version of the physical schema of topic values',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
