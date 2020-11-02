@@ -29,20 +29,20 @@ class SchemaRegistryScraper:
 
     def scrape_schema_metadata(self, topic_name):
         schema_metadata = {}
-        subject_value = topic_name + '-value'
         subject_key = topic_name + '-key'
-        try:
-            key_schema_metadata = self._get_subject_details(
-                subject_key, MetadataConstants.TOPIC_KEY_SCHEMA)
-            schema_metadata.update(key_schema_metadata)
-            value_schema_metadata = self._get_subject_details(
-                subject_value, MetadataConstants.TOPIC_VALUE_SCHEMA)
-            schema_metadata.update(value_schema_metadata)
-            return schema_metadata
-        except (ValueError, TypeError) as e:
-            logging.error("Failed to pull information about topic {} "
-                          "from the Schema Registry: {}".format(topic_name, e))
-            raise
+        subject_value = topic_name + '-value'
+
+        key_schema_metadata = self._get_subject_details(subject_key)
+        if len(key_schema_metadata) > 0:
+            schema_metadata.update(
+                {MetadataConstants.TOPIC_KEY_SCHEMA: key_schema_metadata})
+
+        value_schema_metadata = self._get_subject_details(subject_value)
+        if len(value_schema_metadata) > 0:
+            schema_metadata.update(
+                {MetadataConstants.TOPIC_VALUE_SCHEMA: value_schema_metadata})
+
+        return schema_metadata
 
     def _get_subjects(self):
         try:
@@ -53,7 +53,7 @@ class SchemaRegistryScraper:
                           "from the Schema Registry {}".format(e))
             raise
 
-    def _get_subject_details(self, subject_name, metadata_dict_key):
+    def _get_subject_details(self, subject_name):
         topic_schema_metadata = {}
         try:
             if subject_name in self._subjects:
@@ -62,7 +62,7 @@ class SchemaRegistryScraper:
                 schema_str = registered_schema.schema.schema_str
                 schema_version = registered_schema.version
                 schema_type = registered_schema.schema.schema_type
-                topic_schema_metadata[metadata_dict_key] = {
+                topic_schema_metadata = {
                     MetadataConstants.SCHEMA_VERSION: schema_version,
                     MetadataConstants.SCHEMA_TYPE: schema_type,
                     MetadataConstants.SCHEMA_STRING: schema_str
