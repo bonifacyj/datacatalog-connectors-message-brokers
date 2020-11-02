@@ -80,10 +80,24 @@ class DataCatalogTagFactory:
                            MetadataConstants.MAX_COMPACTION_LAG_TEXT)
         key_schema = topic_metadata.get(MetadataConstants.TOPIC_KEY_SCHEMA)
         if key_schema:
-            tag.fields[template_fields.physical_schema_key.
-                       name].string_value = key_schema
+            tag.fields[template_fields.topic_keys_physical_schema.
+                       name].string_value = key_schema.get(
+                           MetadataConstants.SCHEMA_STRING)
+            tag.fields[template_fields.topic_keys_schema_type.
+                       name].string_value = key_schema.get(
+                           MetadataConstants.SCHEMA_TYPE)
+            tag.fields[template_fields.topic_keys_schema_version.
+                       name].double_value = key_schema.get(
+                           MetadataConstants.SCHEMA_VERSION)
         value_schema = topic_metadata.get(MetadataConstants.TOPIC_VALUE_SCHEMA)
         if value_schema:
-            tag.fields[template_fields.physical_schema_value.
-                       name].string_value = value_schema
+            tag.fields[template_fields.topic_values_physical_schema.
+                       name].string_value = value_schema.get(
+                           MetadataConstants.SCHEMA_STRING)
+            tag.fields[template_fields.topic_values_schema_type.
+                       name].string_value = value_schema.get(
+                           MetadataConstants.SCHEMA_TYPE)
+            tag.fields[template_fields.topic_values_schema_version.
+                       name].double_value = value_schema.get(
+                           MetadataConstants.SCHEMA_VERSION)
         return tag
