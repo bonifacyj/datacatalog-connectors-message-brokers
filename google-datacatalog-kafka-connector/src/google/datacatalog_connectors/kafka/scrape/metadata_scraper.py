@@ -23,6 +23,7 @@ from confluent_kafka.cimpl import KafkaException
 from google.datacatalog_connectors.kafka.config.\
     metadata_constants import MetadataConstants
 from .metadata_values_converter import MetadataValuesConverter
+from .schema_registry_scraper import SchemaRegistryScraper
 
 
 class MetadataScraper:
@@ -115,7 +116,10 @@ class MetadataScraper:
             topic_description.update(
                 self._get_topic_compaction_config(config_desc))
         if self._schema_registry_client is not None:
-            topic_description.update(self._get_topic_schemas(topic_name))
+            schema_registry_scraper = SchemaRegistryScraper(
+                self._schema_registry_client)
+            topic_description.update(
+                schema_registry_scraper.scrape_schema_metadata(topic_name))
         return topic_description
 
     def _get_topic_retention_config(self, config):
@@ -165,25 +169,3 @@ class MetadataScraper:
             })
 
         return topic_compaction_config
-
-    def _get_topic_schemas(self, topic_name):
-        topic_schemas = {}
-        subject_value = topic_name + '-value'
-        subject_key = topic_name + '-key'
-        try:
-            subjects = self._schema_registry_client.get_subjects()
-            if subject_value in subjects:
-                value_schema = self._schema_registry_client.get_latest_version(
-                    subject_value).schema.schema_str
-                topic_schemas[
-                    MetadataConstants.TOPIC_VALUE_SCHEMA] = value_schema
-            if subject_key in subjects:
-                key_schema = self._schema_registry_client.get_latest_version(
-                    subject_key).schema.schema_str
-                topic_schemas[MetadataConstants.TOPIC_KEY_SCHEMA] = key_schema
-        except (ValueError, TypeError) as e:
-            logging.error("Failed to pull information about topic {} "
-                          "from the Schema Registry: {}".format(topic_name, e))
-            raise
-
-        return topic_schemas
