@@ -94,16 +94,26 @@ class TagTemplateConstants:
                 'consumer_groups', 'Consumer groups',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
             self.physical_schema_key = TagTemplateField(
-                'physical_schema_key', 'Key physical schema',
+                'physical_schema_topic_keys', 'Topic-Key physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+            self.schema_type_keys = TagTemplateField(
+                'schema_type_topic_keys',
+                'Type of the physical schema of topic keys',
+                datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+            self.schema_version_keys = TagTemplateField(
+                'schema_version_topic_keys',
+                'Version of the physical schema of topic keys',
+                datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
             self.physical_schema_value = TagTemplateField(
-                'physical_schema_value', 'Value physical schema',
+                'physical_schema_topic_values', 'Topic-Value physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.schema_type = TagTemplateField(
-                'schema_type', 'Schema type',
+            self.schema_type_values = TagTemplateField(
+                'schema_type_topic_values',
+                'Type of the physical schema of topic values',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.schema_version = TagTemplateField(
-                'schema_version', 'Schema version',
+            self.schema_version_values = TagTemplateField(
+                'schema_version_topic_values',
+                'Version of the physical schema of topic values',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
 
 
