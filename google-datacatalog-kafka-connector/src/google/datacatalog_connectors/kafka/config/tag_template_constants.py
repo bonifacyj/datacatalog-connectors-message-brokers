@@ -99,6 +99,12 @@ class TagTemplateConstants:
             self.physical_schema_value = TagTemplateField(
                 'physical_schema_value', 'Value physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+            self.schema_type = TagTemplateField(
+                'schema_type', 'Schema type',
+                datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+            self.schema_version = TagTemplateField(
+                'schema_version', 'Schema version',
+                datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
 
 
 class TagTemplateField:

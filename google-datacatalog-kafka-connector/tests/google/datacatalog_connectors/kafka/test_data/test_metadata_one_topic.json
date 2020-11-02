@@ -15,8 +15,16 @@
       "max_compaction_lag": 9223372036854775807,
       "max_compaction_lag_text": "292471208y 247d 7h 12min 55sec 807.0ms",
       "cleanup_policy": "delete, compact",
-      "topic_key_schema": "{\"type\":\"record\",\"name\":\"updates\", \"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"degrees\",\"type\":\"double\"}]}",
-      "topic_value_schema": "{\"type\":\"record\",\"name\":\"updates\", \"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"degrees\",\"type\":\"double\"}]}"
+      "topic_key_schema":
+        {"schema_type": "AVRO",
+        "schema_version": 1,
+        "schema_string": "{\"type\":\"record\",\"name\":\"updates\", \"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"degrees\",\"type\":\"double\"}]}"
+        },
+      "topic_value_schema":
+        {"schema_type": "AVRO",
+        "schema_version": 1,
+        "schema_string": "{\"type\":\"record\",\"name\":\"updates\", \"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"degrees\",\"type\":\"double\"}]}"
+        }
     }
   ]
 }

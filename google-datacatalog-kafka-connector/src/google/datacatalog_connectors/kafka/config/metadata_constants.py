@@ -33,3 +33,6 @@ class MetadataConstants:
     BOOTSTRAP_SERVER = "bootstrap_server"
     TOPIC_KEY_SCHEMA = "topic_key_schema"
     TOPIC_VALUE_SCHEMA = "topic_value_schema"
+    SCHEMA_TYPE = "schema_type"
+    SCHEMA_VERSION = "schema_version"
+    SCHEMA_STRING = "schema_string"
