@@ -110,7 +110,7 @@ pip install .
 - Data Catalog Admin
 
 #### 2.1.2. Download a JSON key and save it as
-- `<YOUR-CREDENTIALS_FILES_FOLDER>/postgresql2dc-credentials.json`
+- `<YOUR-CREDENTIALS_FILES_FOLDER>/kafka2dc-credentials.json`
 
 > Please notice this folder and file will be required in next steps.
 
