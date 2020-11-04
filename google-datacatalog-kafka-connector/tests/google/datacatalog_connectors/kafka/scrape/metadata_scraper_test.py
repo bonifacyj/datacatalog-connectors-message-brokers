@@ -30,21 +30,36 @@ class MetadataScraperTestCase(unittest.TestCase):
     __HOST = 'fake_host'
     __MODULE_PATH = os.path.dirname(os.path.abspath(__file__))
 
-    def test_scrape_metadata_with_credentials_should_return_objects(self):
+    def test_scrape_metadata_without_schema_registry_should_return_objects(
+            self):
         kafka_admin_client = test_utils.FakeKafkaAdminClient()
-        scraper = MetadataScraper(kafka_admin_client, self.__HOST)
+        scraper = MetadataScraper(self.__HOST,
+                                  kafka_admin_client,
+                                  schema_registry_client=None)
+        metadata = scraper.get_metadata()
+        self.assertGreater(len(metadata), 0)
+
+    def test_scrape_metadata_with_schema_registry_should_return_objects(self):
+        kafka_admin_client = test_utils.FakeKafkaAdminClient()
+        kafka_schema_registry_client = test_utils.\
+            FakeKafkaSchemaRegistryClient()
+        scraper = MetadataScraper(self.__HOST, kafka_admin_client,
+                                  kafka_schema_registry_client)
         metadata = scraper.get_metadata()
         self.assertGreater(len(metadata), 0)
 
     def test_scrape_metadata_on_connection_exception_should_re_raise(self):
         test_config = {'bootstrap.servers': self.__HOST}
         admin_client = AdminClient(test_config)
-        scraper = MetadataScraper(admin_client, self.__HOST)
+        scraper = MetadataScraper(self.__HOST, admin_client)
         self.assertRaises(Exception, scraper.get_metadata)
 
     def test_scrape_metadata_should_describe_all_fields(self):
         kafka_admin_client = test_utils.FakeKafkaAdminClient()
-        scraper = MetadataScraper(kafka_admin_client, self.__HOST)
+        kafka_schema_registry_client = test_utils.\
+            FakeKafkaSchemaRegistryClient()
+        scraper = MetadataScraper(self.__HOST, kafka_admin_client,
+                                  kafka_schema_registry_client)
         metadata = scraper.get_metadata()
         expected_metadata = utils.Utils.convert_json_to_object(
             self.__MODULE_PATH, 'test_metadata_one_topic.json')
@@ -54,7 +69,7 @@ class MetadataScraperTestCase(unittest.TestCase):
     def test_scrape_cluster_without_topics_should_return_cluster_metadata(
             self):
         kafka_admin_client = test_utils.FakeKafkaAdminClientEmptyCluster()
-        scraper = MetadataScraper(kafka_admin_client, self.__HOST)
+        scraper = MetadataScraper(self.__HOST, kafka_admin_client)
         metadata = scraper.get_metadata()
         expected_metadata = utils.Utils.convert_json_to_object(
             self.__MODULE_PATH, 'test_metadata_no_topics.json')

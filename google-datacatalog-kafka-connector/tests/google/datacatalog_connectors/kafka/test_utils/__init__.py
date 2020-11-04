@@ -14,11 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .test_utils import FakeDataCatalogEntryFactory,\
-    FakeKafkaAdminClient, FakeKafkaAdminClientEmptyCluster,\
+from .test_utils import FakeDataCatalogEntryFactory, \
+    FakeKafkaSchemaRegistryClient, FakeKafkaAdminClient, \
+    FakeKafkaAdminClientEmptyCluster,\
     get_test_topic_entry, get_test_cluster_entry,\
     mock_parse_args
 
 __all__ = ('FakeDataCatalogEntryFactory', 'FakeKafkaAdminClient',
-           'get_test_topic_entry', 'get_test_cluster_entry', 'mock_parse_args',
+           'FakeKafkaSchemaRegistryClient', 'get_test_topic_entry',
+           'get_test_cluster_entry', 'mock_parse_args',
            'FakeKafkaAdminClientEmptyCluster')

@@ -77,9 +77,8 @@ class DatacatalogSynchronizerTestCase(unittest.TestCase):
         # Test that all synchronizer calls go through and it doesn't
         # break in the middle
         make_entries_from_cluster_metadata.return_value = [{}]
-        connection_config = {
-            'bootstrap.servers': DatacatalogSynchronizerTestCase.__HOST,
-            'group.id': 'test_group'
+        schema_registry_conf = {
+            'url': 'https://test_url',
         }
 
         synchronizer = datacatalog_synchronizer.DataCatalogSynchronizer(
@@ -87,8 +86,8 @@ class DatacatalogSynchronizerTestCase(unittest.TestCase):
             DatacatalogSynchronizerTestCase.__LOCATION_ID,
             DatacatalogSynchronizerTestCase.__ENTRY_GROUP_ID,
             DatacatalogSynchronizerTestCase.__HOST,
-            connection_config,
             MetadataScraper,
+            schema_registry_conf,
             enable_monitoring=True)
 
         synchronizer.run()
