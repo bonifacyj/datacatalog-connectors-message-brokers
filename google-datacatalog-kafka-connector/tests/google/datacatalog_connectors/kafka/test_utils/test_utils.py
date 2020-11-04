@@ -20,6 +20,7 @@ from google.cloud import datacatalog_v1beta1
 from confluent_kafka.admin import ClusterMetadata, \
     TopicMetadata, BrokerMetadata, PartitionMetadata,\
     ConfigEntry, ConfigResource
+from confluent_kafka.schema_registry import Schema, RegisteredSchema
 from google.datacatalog_connectors.kafka.prepare.\
     datacatalog_entry_factory import DataCatalogEntryFactory
 
@@ -80,6 +81,23 @@ class FakeKafkaAdminClient(mock.MagicMock):
         return config_futures
 
 
+class FakeKafkaSchemaRegistryClient(mock.MagicMock):
+
+    def get_subjects(self):
+        return ["temperature-key", "temperature-value", "test-subject"]
+
+    def get_latest_version(self, subject_name):
+        test_schema_str = '{"type":"record","name":"updates", ' \
+                          '"fields":[{"name":"id","type":"string"},' \
+                          '{"name":"degrees","type":"double"}]}'
+        schema = Schema(test_schema_str, schema_type="AVRO")
+        registered_schema = RegisteredSchema(schema_id=1,
+                                             schema=schema,
+                                             subject=subject_name,
+                                             version=1)
+        return registered_schema
+
+
 def mock_parse_args():
     args = MockedObject()
     args.datacatalog_project_id = "project_id"
@@ -87,7 +105,11 @@ def mock_parse_args():
     args.datacatalog_entry_group_id = "kafka"
     args.kafka_host = "test_address"
     args.service_account_path = "path_to_service_account"
-    args.group_id = 'test_id'
+    args.schema_registry_url = "test_url"
+    args.schema_registry_ssl_ca_location = "test_ssl_ca_location"
+    args.schema_registry_ssl_cert_location = "test_ssl_cert_location"
+    args.schema_registry_ssl_key_location = "test_ssl_key_location"
+    args.schema_registry_auth_user_info = None
     args.enable_monitoring = True
     return args
 

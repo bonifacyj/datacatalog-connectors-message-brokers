@@ -18,6 +18,8 @@ import logging
 import uuid
 
 from confluent_kafka.admin import AdminClient
+from confluent_kafka.schema_registry.schema_registry_client \
+    import SchemaRegistryClient
 
 from google.datacatalog_connectors.commons.cleanup \
     import datacatalog_metadata_cleaner
@@ -36,15 +38,15 @@ class DataCatalogSynchronizer:
                  location_id,
                  entry_group_id,
                  kafka_hosts,
-                 connection_config,
                  metadata_scraper,
+                 schema_registry_conf=None,
                  enable_monitoring=None):
         self.__entry_group_id = entry_group_id
         self.__metadata_scraper = metadata_scraper
         self.__project_id = project_id
         self.__location_id = location_id
         self.__kafka_hosts = kafka_hosts
-        self.__connection_config = connection_config
+        self.__schema_registry_conf = schema_registry_conf
         self.__task_id = uuid.uuid4().hex[:8]
         self.__metrics_processor = metrics_processor.MetricsProcessor(
             project_id, location_id, entry_group_id, enable_monitoring,
@@ -57,9 +59,11 @@ class DataCatalogSynchronizer:
         self._before_run()
         logging.info('\n\n==============Scrape metadata===============')
 
-        client = self._create_client()
-        metadata = self.__metadata_scraper(client,
-                                           self.__kafka_hosts).get_metadata()
+        admin_client = self._create_admin_client()
+        schema_registry_client = self._create_schema_registry_client()
+        metadata = self.__metadata_scraper(
+            self.__kafka_hosts, admin_client,
+            schema_registry_client).get_metadata()
 
         self._log_metadata(metadata)
 
@@ -83,9 +87,15 @@ class DataCatalogSynchronizer:
 
         return self.__task_id
 
-    def _create_client(self):
+    def _create_admin_client(self):
         connection_config = {'bootstrap.servers': self.__kafka_hosts}
         client = AdminClient(connection_config)
+        return client
+
+    def _create_schema_registry_client(self):
+        client = None
+        if self.__schema_registry_conf is not None:
+            client = SchemaRegistryClient(self.__schema_registry_conf)
         return client
 
     def __prepare_datacatalog_entries(self, metadata, tag_templates_dict):

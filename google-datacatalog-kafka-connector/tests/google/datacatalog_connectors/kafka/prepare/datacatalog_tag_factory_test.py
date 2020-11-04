@@ -58,7 +58,17 @@ class DataCatalogTagFactoryTest(unittest.TestCase):
             MetadataConstants.MIN_COMPACTION_LAG: 100,
             MetadataConstants.MIN_COMPACTION_LAG_TEXT: "100 ms",
             MetadataConstants.MAX_COMPACTION_LAG: 172800000,
-            MetadataConstants.MAX_COMPACTION_LAG_TEXT: "2 d"
+            MetadataConstants.MAX_COMPACTION_LAG_TEXT: "2 d",
+            MetadataConstants.TOPIC_VALUE_SCHEMA: {
+                MetadataConstants.SCHEMA_STRING: "test-schema-topic-values",
+                MetadataConstants.SCHEMA_TYPE: "AVRO",
+                MetadataConstants.SCHEMA_VERSION: 9
+            },
+            MetadataConstants.TOPIC_KEY_SCHEMA: {
+                MetadataConstants.SCHEMA_STRING: "test-schema-topic-keys",
+                MetadataConstants.SCHEMA_TYPE: "AVRO",
+                MetadataConstants.SCHEMA_VERSION: 2
+            }
         }
         tag = tag_factory.make_tag_for_topic(tag_template, topic_metadata)
         self.assertEqual(3, tag.fields['num_partitions'].double_value)
@@ -76,3 +86,16 @@ class DataCatalogTagFactoryTest(unittest.TestCase):
         self.assertEqual(172800000,
                          tag.fields['max_compaction_lag_ms'].double_value)
         self.assertEqual("2 d", tag.fields['max_compaction_lag'].string_value)
+        self.assertEqual(
+            "test-schema-topic-values",
+            tag.fields['physical_schema_topic_values'].string_value)
+        self.assertEqual("AVRO",
+                         tag.fields['schema_type_topic_values'].string_value)
+        self.assertEqual(
+            9, tag.fields['schema_version_topic_values'].double_value)
+        self.assertEqual("test-schema-topic-keys",
+                         tag.fields['physical_schema_topic_keys'].string_value)
+        self.assertEqual("AVRO",
+                         tag.fields['schema_type_topic_keys'].string_value)
+        self.assertEqual(2,
+                         tag.fields['schema_version_topic_keys'].double_value)

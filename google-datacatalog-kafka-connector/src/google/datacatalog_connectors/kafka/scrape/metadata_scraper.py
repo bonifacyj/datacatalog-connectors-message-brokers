@@ -23,15 +23,15 @@ from confluent_kafka.cimpl import KafkaException
 from google.datacatalog_connectors.kafka.config.\
     metadata_constants import MetadataConstants
 from .metadata_values_converter import MetadataValuesConverter
+from .schema_registry_scraper import SchemaRegistryScraper
 
 
 class MetadataScraper:
 
-    _SYSTEM_TOPIC = '__consumer_offsets'
-
-    def __init__(self, client, bootstrap_server):
-        self._admin_client = client
+    def __init__(self, bootstrap_server, client, schema_registry_client=None):
         self._bootstrap_server = bootstrap_server
+        self._admin_client = client
+        self._schema_registry_client = schema_registry_client
 
     def get_metadata(self):
         try:
@@ -58,14 +58,16 @@ class MetadataScraper:
     def _get_topics_metadata(self, metadata_object):
         descriptions = []
         topic_names = list(metadata_object.topics.keys())
-        if self._SYSTEM_TOPIC in topic_names:
-            topic_names.remove(self._SYSTEM_TOPIC)
-        if len(topic_names) == 0:
+        user_topics = [
+            topic_name for topic_name in topic_names
+            if not self._is_system_topic(topic_name)
+        ]
+        if len(user_topics) == 0:
             logging.warning('There are no topics in the given cluster.')
         else:
             config_resources = [
                 ConfigResource(confluent_kafka.admin.RESOURCE_TOPIC,
-                               topic_name) for topic_name in topic_names
+                               topic_name) for topic_name in user_topics
             ]
             config_futures = self._admin_client.describe_configs(
                 config_resources, request_timeout=10)
@@ -86,6 +88,17 @@ class MetadataScraper:
         topic_metadata = {MetadataConstants.TOPICS: descriptions}
         return topic_metadata
 
+    def _is_system_topic(self, topic_name):
+        """
+        Assumes that topic names follow the convention:
+        all topics starting with underscore are system topics
+        :param topic_name: str
+        :return: bool
+        """
+        if topic_name.startswith('_'):
+            return True
+        return False
+
     def _assemble_topic_metadata(self, topic_name, raw_metadata, config_desc):
         num_partitions = len(raw_metadata.topics[topic_name].partitions)
         cleanup_policy = config_desc['cleanup.policy'].value
@@ -102,6 +115,11 @@ class MetadataScraper:
         if 'compact' in cleanup_policy:
             topic_description.update(
                 self._get_topic_compaction_config(config_desc))
+        if self._schema_registry_client is not None:
+            schema_registry_scraper = SchemaRegistryScraper(
+                self._schema_registry_client)
+            topic_description.update(
+                schema_registry_scraper.scrape_schema_metadata(topic_name))
         return topic_description
 
     def _get_topic_retention_config(self, config):
