@@ -23,7 +23,7 @@ from google.datacatalog_connectors.kafka.scrape.\
 from google.datacatalog_connectors.kafka.config import MetadataConstants
 
 
-class MetadataScraperTestCase(unittest.TestCase):
+class SchemaRegistryTestCase(unittest.TestCase):
 
     def test_scrape_schema_metadata_returns_metadata_dict(self):
         schema_registry_client = test_utils.FakeKafkaSchemaRegistryClient()
