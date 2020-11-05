@@ -83,21 +83,37 @@ class DataCatalogTagFactory:
             tag.fields[template_fields.keys_physical_schema.
                        name].string_value = key_schema.get(
                            MetadataConstants.SCHEMA_STRING)
-            tag.fields[template_fields.keys_physical_schema_type.
+            tag.fields[template_fields.keys_physical_schema_format.
                        name].string_value = key_schema.get(
-                           MetadataConstants.SCHEMA_TYPE)
+                           MetadataConstants.SCHEMA_FORMAT)
             tag.fields[template_fields.keys_physical_schema_version.
                        name].double_value = key_schema.get(
                            MetadataConstants.SCHEMA_VERSION)
+            schema_name = key_schema.get(MetadataConstants.SCHEMA_NAME)
+            if schema_name:
+                tag.fields[template_fields.keys_physical_schema_name.
+                           name].string_value = schema_name
+            schema_type = key_schema.get(MetadataConstants.SCHEMA_TYPE)
+            if schema_type:
+                tag.fields[template_fields.keys_physical_schema_type.
+                           name].string_value = schema_type
         value_schema = topic_metadata.get(MetadataConstants.TOPIC_VALUE_SCHEMA)
         if value_schema:
             tag.fields[template_fields.payload_physical_schema.
                        name].string_value = value_schema.get(
                            MetadataConstants.SCHEMA_STRING)
-            tag.fields[template_fields.payload_physical_schema_type.
+            tag.fields[template_fields.payload_physical_schema_format.
                        name].string_value = value_schema.get(
-                           MetadataConstants.SCHEMA_TYPE)
+                           MetadataConstants.SCHEMA_FORMAT)
             tag.fields[template_fields.payload_physical_schema_version.
                        name].double_value = value_schema.get(
                            MetadataConstants.SCHEMA_VERSION)
+            schema_name = value_schema.get(MetadataConstants.SCHEMA_NAME)
+            if schema_name:
+                tag.fields[template_fields.payload_physical_schema_name.
+                           name].string_value = schema_name
+            schema_type = value_schema.get(MetadataConstants.SCHEMA_TYPE)
+            if schema_type:
+                tag.fields[template_fields.payload_physical_schema_type.
+                           name].string_value = schema_type
         return tag

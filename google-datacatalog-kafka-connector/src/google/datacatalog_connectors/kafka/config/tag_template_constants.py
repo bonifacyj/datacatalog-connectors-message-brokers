@@ -96,14 +96,28 @@ class TagTemplateConstants:
             self.keys_physical_schema = TagTemplateField(
                 'keys_physical_schema', 'Keys physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.keys_physical_schema_type = TagTemplateField(
-                'keys_schema_type', 'Type of the keys physical schema',
+            self.keys_physical_schema_format = TagTemplateField(
+                'keys_schema_format', 'Format of the keys physical schema',
+                datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+            self.keys_physical_schema_name = TagTemplateField(
+                'keys_schema_name', 'Name of the keys physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
             self.keys_physical_schema_version = TagTemplateField(
                 'keys_schema_version', 'Version of the keys physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
+            self.keys_physical_schema_type = TagTemplateField(
+                'keys_schema_type', 'Type of the keys physical schema',
+                datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
             self.payload_physical_schema = TagTemplateField(
                 'payload_physical_schema', 'Message payload physical schema',
+                datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+            self.payload_physical_schema_format = TagTemplateField(
+                'payload_schema_format',
+                'Format of the physical message payload schema',
+                datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
+            self.payload_physical_schema_name = TagTemplateField(
+                'payload_schema_name',
+                'Name of the physical message payload schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
             self.payload_physical_schema_type = TagTemplateField(
                 'payload_schema_type',
