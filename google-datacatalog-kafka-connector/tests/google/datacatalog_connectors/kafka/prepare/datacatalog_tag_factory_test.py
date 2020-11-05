@@ -17,7 +17,8 @@
 import os
 import unittest
 
-from google.datacatalog_connectors.kafka.config import MetadataConstants
+from google.datacatalog_connectors.kafka.config import \
+    MetadataConstants, TagTemplateConstants
 from google.datacatalog_connectors.kafka.prepare import \
     datacatalog_tag_factory
 from google.cloud import datacatalog_v1beta1
@@ -71,31 +72,46 @@ class DataCatalogTagFactoryTest(unittest.TestCase):
             }
         }
         tag = tag_factory.make_tag_for_topic(tag_template, topic_metadata)
-        self.assertEqual(3, tag.fields['num_partitions'].double_value)
+        fields = TagTemplateConstants.get_constants_for_topic_tag_template()
+        self.assertEqual(3,
+                         tag.fields[fields.num_partitions.name].double_value)
         self.assertEqual('delete, compact',
-                         tag.fields['cleanup_policy'].string_value)
-        self.assertEqual(500, tag.fields['retention_ms'].double_value)
-        self.assertEqual("500 ms",
-                         tag.fields['retention_duration_as_text'].string_value)
-        self.assertEqual(20, tag.fields['retention_bytes'].double_value)
-        self.assertEqual("20 bytes",
-                         tag.fields['retention_size_as_text'].string_value)
-        self.assertEqual(100, tag.fields['min_compaction_lag_ms'].double_value)
-        self.assertEqual("100 ms",
-                         tag.fields['min_compaction_lag'].string_value)
-        self.assertEqual(172800000,
-                         tag.fields['max_compaction_lag_ms'].double_value)
-        self.assertEqual("2 d", tag.fields['max_compaction_lag'].string_value)
+                         tag.fields[fields.cleanup_policy.name].string_value)
+        self.assertEqual(500,
+                         tag.fields[fields.retention_time.name].double_value)
+        self.assertEqual(
+            "500 ms",
+            tag.fields[fields.retention_time_as_text.name].string_value)
+        self.assertEqual(20,
+                         tag.fields[fields.retention_space.name].double_value)
+        self.assertEqual(
+            "20 bytes",
+            tag.fields[fields.retention_space_as_text.name].string_value)
+        self.assertEqual(
+            100, tag.fields[fields.min_compaction_lag.name].double_value)
+        self.assertEqual(
+            "100 ms",
+            tag.fields[fields.min_compaction_lag_as_text.name].string_value)
+        self.assertEqual(
+            172800000, tag.fields[fields.max_compaction_lag.name].double_value)
+        self.assertEqual(
+            "2 d",
+            tag.fields[fields.max_compaction_lag_as_text.name].string_value)
         self.assertEqual(
             "test-schema-topic-values",
-            tag.fields['physical_schema_topic_values'].string_value)
-        self.assertEqual("AVRO",
-                         tag.fields['schema_type_topic_values'].string_value)
+            tag.fields[fields.payload_physical_schema.name].string_value)
         self.assertEqual(
-            9, tag.fields['schema_version_topic_values'].double_value)
-        self.assertEqual("test-schema-topic-keys",
-                         tag.fields['physical_schema_topic_keys'].string_value)
-        self.assertEqual("AVRO",
-                         tag.fields['schema_type_topic_keys'].string_value)
-        self.assertEqual(2,
-                         tag.fields['schema_version_topic_keys'].double_value)
+            "AVRO",
+            tag.fields[fields.payload_physical_schema_type.name].string_value)
+        self.assertEqual(
+            9, tag.fields[
+                fields.payload_physical_schema_version.name].double_value)
+        self.assertEqual(
+            "test-schema-topic-keys",
+            tag.fields[fields.keys_physical_schema.name].string_value)
+        self.assertEqual(
+            "AVRO",
+            tag.fields[fields.keys_physical_schema_type.name].string_value)
+        self.assertEqual(
+            2,
+            tag.fields[fields.keys_physical_schema_version.name].double_value)
