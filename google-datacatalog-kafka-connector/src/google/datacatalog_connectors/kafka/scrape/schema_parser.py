@@ -36,7 +36,7 @@ class SchemaParser:
         if parsed_schema.type in schema.NAMED_TYPES:
             return [AvroSchemaField(parsed_schema.type, parsed_schema.name)]
         else:
-            return [AvroSchemaField(parsed_schema.type), "NA"]
+            return [AvroSchemaField(parsed_schema.type), "None"]
 
     def _scrape_fields_from_record_schema(self, record_schema):
         avro_fields = []

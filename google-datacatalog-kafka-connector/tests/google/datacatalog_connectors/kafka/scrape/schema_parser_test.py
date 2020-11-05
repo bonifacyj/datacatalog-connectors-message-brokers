@@ -130,7 +130,7 @@ class SchemaParserTestCase(unittest.TestCase):
         ]
         expected_fields = [
             AvroSchemaField("record", "User", expected_subfields),
-            AvroSchemaField("NA", "map"),
+            AvroSchemaField("None", "map"),
             AvroSchemaField("enum", "Weekdays")
         ]
         self.maxDiff = None
