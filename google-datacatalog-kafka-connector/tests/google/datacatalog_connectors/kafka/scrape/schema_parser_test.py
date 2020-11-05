@@ -91,8 +91,8 @@ class SchemaParserTestCase(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(fields, expected_fields)
 
-    def test_get_fields_schema_non_primitive_types(self):
-        schema_dict = {
+    def test_get_fields_schema_mixed_types(self):
+        orig_schema = [{
             "namespace":
                 "test.avro",
             "type":
@@ -112,14 +112,26 @@ class SchemaParserTestCase(unittest.TestCase):
                 "name": "favorite_color",
                 "type": ["string", "null"]
             }]
-        }
-        schema_str = json.dumps(schema_dict)
+        }, {
+            "type": "map",
+            "values": "int"
+        }, {
+            "type": "enum",
+            "name": "Weekdays",
+            "symbols": ["Mon", "Tue", "Wed", "Thu", "Fri"]
+        }]
+        schema_str = json.dumps(orig_schema)
         schema_parser = SchemaParser(schema_str)
         fields = schema_parser.get_fields_names_and_types()
-        expected_fields = [
+        expected_subfields = [
             AvroSchemaField("map", "map_name"),
             AvroSchemaField("union", "favorite_number"),
             AvroSchemaField("union", "favorite_color")
+        ]
+        expected_fields = [
+            AvroSchemaField("record", "User", expected_subfields),
+            AvroSchemaField("NA", "map"),
+            AvroSchemaField("enum", "Weekdays")
         ]
         self.maxDiff = None
         self.assertEqual(fields, expected_fields)
