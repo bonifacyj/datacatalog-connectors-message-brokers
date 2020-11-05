@@ -38,16 +38,16 @@ class SchemaParserTestCase(unittest.TestCase):
             }]
         }
         schema_str = json.dumps(schema_dict)
-        schema_parser = SchemaParser()
-        fields = schema_parser.get_fields_names_and_types(schema_str)
+        schema_parser = SchemaParser(schema_str)
+        fields = schema_parser.get_fields_names_and_types()
         expected_fields = [
-            AvroSchemaField("id", "string"),
-            AvroSchemaField("degrees", "double")
+            AvroSchemaField("string", "id"),
+            AvroSchemaField("double", "degrees")
         ]
         self.maxDiff = None
         self.assertListEqual(fields, expected_fields)
 
-    def test_get_fields_from_nested_schema(self):
+    def test_get_fields_from_nested_record_schema(self):
         schema_dict = {
             "name":
                 "MasterSchema",
@@ -78,15 +78,15 @@ class SchemaParserTestCase(unittest.TestCase):
             }]
         }
         schema_str = json.dumps(schema_dict)
-        schema_parser = SchemaParser()
-        fields = schema_parser.get_fields_names_and_types(schema_str)
+        schema_parser = SchemaParser(schema_str)
+        fields = schema_parser.get_fields_names_and_types()
         expected_subfields = [
-            AvroSchemaField("sub_field_1", "string"),
-            AvroSchemaField("sub_field_2", "int")
+            AvroSchemaField("string", "sub_field_1"),
+            AvroSchemaField("int", "sub_field_2")
         ]
         expected_fields = [
-            AvroSchemaField("field_1", "record", expected_subfields),
-            AvroSchemaField("field_2", "record", expected_subfields)
+            AvroSchemaField("record", "field_1", expected_subfields),
+            AvroSchemaField("record", "field_2", expected_subfields)
         ]
         self.maxDiff = None
         self.assertEqual(fields, expected_fields)
@@ -114,12 +114,12 @@ class SchemaParserTestCase(unittest.TestCase):
             }]
         }
         schema_str = json.dumps(schema_dict)
-        schema_parser = SchemaParser()
-        fields = schema_parser.get_fields_names_and_types(schema_str)
+        schema_parser = SchemaParser(schema_str)
+        fields = schema_parser.get_fields_names_and_types()
         expected_fields = [
-            AvroSchemaField("map_name", "map"),
-            AvroSchemaField("favorite_number", "union"),
-            AvroSchemaField("favorite_color", "union")
+            AvroSchemaField("map", "map_name"),
+            AvroSchemaField("union", "favorite_number"),
+            AvroSchemaField("union", "favorite_color")
         ]
         self.maxDiff = None
         self.assertEqual(fields, expected_fields)
