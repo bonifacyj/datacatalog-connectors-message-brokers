@@ -38,8 +38,8 @@ class SchemaParserTestCase(unittest.TestCase):
             }]
         }
         schema_str = json.dumps(schema_dict)
-        schema_parser = SchemaParser(schema_str)
-        fields = schema_parser.get_fields_names_and_types()
+        schema_parser = SchemaParser()
+        fields = schema_parser.get_fields_names_and_types(schema_str)
         expected_fields = [
             AvroSchemaField("id", "string"),
             AvroSchemaField("degrees", "double")
@@ -78,8 +78,8 @@ class SchemaParserTestCase(unittest.TestCase):
             }]
         }
         schema_str = json.dumps(schema_dict)
-        schema_parser = SchemaParser(schema_str)
-        fields = schema_parser.get_fields_names_and_types()
+        schema_parser = SchemaParser()
+        fields = schema_parser.get_fields_names_and_types(schema_str)
         expected_subfields = [
             AvroSchemaField("sub_field_1", "string"),
             AvroSchemaField("sub_field_2", "int")
@@ -114,8 +114,8 @@ class SchemaParserTestCase(unittest.TestCase):
             }]
         }
         schema_str = json.dumps(schema_dict)
-        schema_parser = SchemaParser(schema_str)
-        fields = schema_parser.get_fields_names_and_types()
+        schema_parser = SchemaParser()
+        fields = schema_parser.get_fields_names_and_types(schema_str)
         expected_fields = [
             AvroSchemaField("map_name", "map"),
             AvroSchemaField("favorite_number", "union"),
