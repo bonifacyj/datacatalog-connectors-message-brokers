@@ -38,7 +38,7 @@ setuptools.setup(
     include_package_data=True,
     install_requires=('pandas==0.24.2', 'gcsfs',
                       'google-datacatalog-connectors-commons', 'pyYAML',
-                      'confluent-kafka', 'fastavro'),
+                      'confluent-kafka', 'fastavro', 'avro'),
     setup_requires=('pytest-runner'),
     tests_require=('mock==3.0.5', 'pytest', 'pytest-cov',
                    'google-datacatalog-connectors-commons-test'),

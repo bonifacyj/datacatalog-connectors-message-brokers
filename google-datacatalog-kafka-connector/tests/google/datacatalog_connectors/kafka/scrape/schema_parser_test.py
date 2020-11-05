@@ -44,7 +44,8 @@ class SchemaParserTestCase(unittest.TestCase):
             AvroSchemaField("id", "string"),
             AvroSchemaField("degrees", "double")
         ]
-        self.assertEqual(str(fields), str(expected_fields))
+        self.maxDiff = None
+        self.assertListEqual(fields, expected_fields)
 
     def test_get_fields_from_nested_schema(self):
         schema_dict = {
@@ -87,7 +88,8 @@ class SchemaParserTestCase(unittest.TestCase):
             AvroSchemaField("field_1", "record", expected_subfields),
             AvroSchemaField("field_2", "record", expected_subfields)
         ]
-        self.assertEqual(str(fields), str(expected_fields))
+        self.maxDiff = None
+        self.assertEqual(fields, expected_fields)
 
     def test_get_fields_schema_non_primitive_types(self):
         schema_dict = {
@@ -119,4 +121,5 @@ class SchemaParserTestCase(unittest.TestCase):
             AvroSchemaField("favorite_number", "union"),
             AvroSchemaField("favorite_color", "union")
         ]
-        self.assertEqual(str(fields), str(expected_fields))
+        self.maxDiff = None
+        self.assertEqual(fields, expected_fields)

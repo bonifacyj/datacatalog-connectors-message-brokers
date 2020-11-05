@@ -33,3 +33,9 @@ class AvroSchemaField:
         self.name = name
         self.field_type = field_type
         self.subfields = subfields
+
+    def __eq__(self, other):
+        return type(other) == type(self) \
+            and self.name == other.name \
+            and self.field_type == other.field_type \
+            and self.subfields == other.subfields
