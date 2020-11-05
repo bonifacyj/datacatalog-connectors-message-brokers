@@ -79,13 +79,13 @@ class TagTemplateConstants:
                 'min_compaction_lag_ms', 'Min compaction lag ms',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
             self.min_compaction_lag_as_text = TagTemplateField(
-                'min_compaction_lag', 'Min compaction lag',
+                'min_compaction_lag_as_test', 'Min compaction lag',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
             self.max_compaction_lag = TagTemplateField(
                 'max_compaction_lag_ms', 'Max compaction lag ms',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
             self.max_compaction_lag_as_text = TagTemplateField(
-                'max_compaction_lag', 'Max compaction lag',
+                'max_compaction_lag_as_text', 'Max compaction lag',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
             self.cleanup_policy = TagTemplateField(
                 'cleanup_policy', 'Cleanup policy',
@@ -93,27 +93,25 @@ class TagTemplateConstants:
             self.consumer_groups = TagTemplateField(
                 'consumer_groups', 'Consumer groups',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.topic_keys_physical_schema = TagTemplateField(
-                'physical_schema_topic_keys', 'Topic-Key physical schema',
+            self.keys_physical_schema = TagTemplateField(
+                'keys_physical_schema', 'Keys physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.topic_keys_physical_schema_type = TagTemplateField(
-                'schema_type_topic_keys',
-                'Type of the physical schema of topic keys',
+            self.keys_physical_schema_type = TagTemplateField(
+                'keys_schema_type', 'Type of the keys physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.topic_keys_physical_schema_version = TagTemplateField(
-                'schema_version_topic_keys',
-                'Version of the physical schema of topic keys',
+            self.keys_physical_schema_version = TagTemplateField(
+                'keys_schema_version', 'Version of the keys physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
-            self.topic_values_physical_schema = TagTemplateField(
-                'physical_schema_topic_values', 'Topic-Value physical schema',
+            self.payload_physical_schema = TagTemplateField(
+                'payload_physical_schema', 'Message payload physical schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.topic_values_physical_schema_type = TagTemplateField(
-                'schema_type_topic_values',
-                'Type of the physical schema of topic values',
+            self.payload_physical_schema_type = TagTemplateField(
+                'payload_schema_type',
+                'Type of the physical message payload schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.STRING)
-            self.topic_values_physical_schema_version = TagTemplateField(
-                'schema_version_topic_values',
-                'Version of the physical schema of topic values',
+            self.payload_physical_schema_version = TagTemplateField(
+                'payload_schema_version',
+                'Version of the physical message payload schema',
                 datacatalog_v1beta1.enums.FieldType.PrimitiveType.DOUBLE)
 
 
