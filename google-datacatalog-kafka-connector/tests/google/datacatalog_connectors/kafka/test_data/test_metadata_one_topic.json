@@ -26,7 +26,7 @@
         "schema_version": 1,
           "schema_name": "updates",
           "schema_type": "record",
-        "schema_string": "{\"type\":\"record\",\"name\":\"updates\", \"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"degrees\",\"type\":\"double\"}]}",
+        "schema_string": "{\"type\":\"record\",\"name\":\"updates\", \"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"degrees\",\"type\":\"double\"}, {\"type\":\"record\",\"name\":\"nested_record\", \"fields\":[{\"name\":\"subfield\",\"type\":\"string\"}]}]}",
           "fields": [{
           "field_name": "id",
           "field_type": "string"
@@ -34,7 +34,18 @@
           {
             "field_name": "degrees",
           "field_type": "double"
-          }]
+          },
+            {
+              "field_name": "nested_record",
+              "field_type": "record",
+              "subfields": [
+                {
+                  "field_name": "subfield",
+                  "field_type": "string"
+                }
+              ]
+            }]
+
         }
     }
   ]
