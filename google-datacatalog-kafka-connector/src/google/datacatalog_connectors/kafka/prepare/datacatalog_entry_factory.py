@@ -55,6 +55,14 @@ class DataCatalogEntryFactory(BaseEntryFactory):
 
         entry.linked_resource = '//{}//{}'.format(self.__metadata_host_server,
                                                   formatted_name)
+        payload_physical_schema = topic.get(
+            MetadataConstants.TOPIC_VALUE_SCHEMA)
+        if payload_physical_schema:
+            fields = payload_physical_schema.get(
+                MetadataConstants.SCHEMA_FIELDS)
+            if fields:
+                entry.schema.columns.extend(
+                    self._create_schema_columns(fields))
 
         return entry_id, entry
 
@@ -96,3 +104,20 @@ class DataCatalogEntryFactory(BaseEntryFactory):
             asset_name = '_' + asset_name
         entry_id = self._format_id(asset_name)
         return entry_id
+
+    def _create_schema_columns(self, schema_fields):
+        columns = []
+        for field in schema_fields:
+            name = field[MetadataConstants.FIELD_NAME]
+            field_type = field[MetadataConstants.FIELD_TYPE]
+            subfields = field.get(MetadataConstants.SCHEMA_SUBFIELDS)
+            if subfields:
+                subcolumns = self._create_schema_columns(subfields)
+                column = datacatalog_v1beta1.types.ColumnSchema(
+                    column=name, type=field_type, subcolumns=subcolumns)
+                columns.append(column)
+            else:
+                columns.append(
+                    datacatalog_v1beta1.types.ColumnSchema(column=name,
+                                                           type=field_type))
+        return columns
