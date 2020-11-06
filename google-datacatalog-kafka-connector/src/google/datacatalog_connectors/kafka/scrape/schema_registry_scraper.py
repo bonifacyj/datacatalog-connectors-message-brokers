@@ -19,6 +19,7 @@ from confluent_kafka.schema_registry.schema_registry_client \
     import SchemaRegistryError
 from google.datacatalog_connectors.kafka.config.\
     metadata_constants import MetadataConstants
+from .avro_schema_parser import AvroSchemaParser
 
 
 class SchemaRegistryScraper:
@@ -61,15 +62,32 @@ class SchemaRegistryScraper:
                     .get_latest_version(subject_name)
                 schema_str = registered_schema.schema.schema_str
                 schema_version = registered_schema.version
-                schema_type = registered_schema.schema.schema_type
+                schema_format = registered_schema.schema.schema_type
                 topic_schema_metadata = {
                     MetadataConstants.SCHEMA_VERSION: schema_version,
-                    MetadataConstants.SCHEMA_TYPE: schema_type,
+                    MetadataConstants.SCHEMA_FORMAT: schema_format,
                     MetadataConstants.SCHEMA_STRING: schema_str
                 }
+                if schema_format == 'AVRO':
+                    topic_schema_metadata.update(
+                        self._parse_avro_schema(schema_str))
             return topic_schema_metadata
         except (ValueError, TypeError) as e:
             logging.error("Failed to pull information about subject {} "
                           "from the Schema Registry: {}".format(
                               subject_name, e))
             raise
+
+    def _parse_avro_schema(self, schema_str):
+        schema_parser = AvroSchemaParser(schema_str)
+        schema_details = {
+            MetadataConstants.SCHEMA_TYPE: schema_parser.get_schema_type()
+        }
+        schema_name = schema_parser.get_schema_name()
+        if schema_name:
+            schema_details.update({MetadataConstants.SCHEMA_NAME: schema_name})
+        schema_fields = schema_parser.get_fields_names_and_types()
+        if schema_fields:
+            schema_details.update(
+                {MetadataConstants.SCHEMA_FIELDS: schema_fields})
+        return schema_details

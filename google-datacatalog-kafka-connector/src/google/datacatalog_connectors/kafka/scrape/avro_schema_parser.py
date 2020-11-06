@@ -1,7 +1,9 @@
 from avro import schema
+from google.datacatalog_connectors.kafka.config.\
+    metadata_constants import MetadataConstants
 
 
-class SchemaParser:
+class AvroSchemaParser:
 
     def __init__(self, schema_str):
         self._parsed_schema = schema.parse(schema_str)
@@ -34,33 +36,30 @@ class SchemaParser:
             if len(fields):
                 return fields
         if parsed_schema.type in schema.NAMED_TYPES:
-            return [AvroSchemaField(parsed_schema.type, parsed_schema.name)]
+            return [{
+                MetadataConstants.FIELD_TYPE: parsed_schema.type,
+                MetadataConstants.FIELD_NAME: parsed_schema.name
+            }]
         else:
-            return [AvroSchemaField(parsed_schema.type), "None"]
+            return [{
+                MetadataConstants.FIELD_TYPE: parsed_schema.type,
+                MetadataConstants.FIELD_NAME: "None"
+            }]
 
     def _scrape_fields_from_record_schema(self, record_schema):
         avro_fields = []
         fields = record_schema.fields
         for field in fields:
             if field.type.type != schema.RECORD:
-                avro_fields.append(AvroSchemaField(field.type.type,
-                                                   field.name))
+                avro_fields.append({
+                    MetadataConstants.FIELD_TYPE: field.type.type,
+                    MetadataConstants.FIELD_NAME: field.name
+                })
             else:
                 subfields = self._scrape_fields_from_record_schema(field.type)
-                avro_fields.append(
-                    AvroSchemaField(field.type.type, field.name, subfields))
+                avro_fields.append({
+                    MetadataConstants.FIELD_TYPE: field.type.type,
+                    MetadataConstants.FIELD_NAME: field.name,
+                    MetadataConstants.SCHEMA_SUBFIELDS: subfields
+                })
         return avro_fields
-
-
-class AvroSchemaField:
-
-    def __init__(self, field_type, name=None, subfields=None):
-        self.name = name
-        self.field_type = field_type
-        self.subfields = subfields
-
-    def __eq__(self, other):
-        return type(other) == type(self) \
-            and self.name == other.name \
-            and self.field_type == other.field_type \
-            and self.subfields == other.subfields

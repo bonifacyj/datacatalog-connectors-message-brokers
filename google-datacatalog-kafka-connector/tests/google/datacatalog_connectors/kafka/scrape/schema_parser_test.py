@@ -17,8 +17,8 @@
 import unittest
 import json
 
-from google.datacatalog_connectors.kafka.scrape.schema_parser \
-    import SchemaParser, AvroSchemaField
+from google.datacatalog_connectors.kafka.scrape.avro_schema_parser \
+    import AvroSchemaParser, AvroSchemaField
 
 
 class SchemaParserTestCase(unittest.TestCase):
@@ -38,7 +38,7 @@ class SchemaParserTestCase(unittest.TestCase):
             }]
         }
         schema_str = json.dumps(schema_dict)
-        schema_parser = SchemaParser(schema_str)
+        schema_parser = AvroSchemaParser(schema_str)
         fields = schema_parser.get_fields_names_and_types()
         expected_fields = [
             AvroSchemaField("string", "id"),
@@ -78,7 +78,7 @@ class SchemaParserTestCase(unittest.TestCase):
             }]
         }
         schema_str = json.dumps(schema_dict)
-        schema_parser = SchemaParser(schema_str)
+        schema_parser = AvroSchemaParser(schema_str)
         fields = schema_parser.get_fields_names_and_types()
         expected_subfields = [
             AvroSchemaField("string", "sub_field_1"),
@@ -121,7 +121,7 @@ class SchemaParserTestCase(unittest.TestCase):
             "symbols": ["Mon", "Tue", "Wed", "Thu", "Fri"]
         }]
         schema_str = json.dumps(orig_schema)
-        schema_parser = SchemaParser(schema_str)
+        schema_parser = AvroSchemaParser(schema_str)
         fields = schema_parser.get_fields_names_and_types()
         expected_subfields = [
             AvroSchemaField("map", "map_name"),
