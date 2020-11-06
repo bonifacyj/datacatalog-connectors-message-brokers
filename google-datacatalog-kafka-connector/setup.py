@@ -36,7 +36,7 @@ setuptools.setup(
         ],
     },
     include_package_data=True,
-    install_requires=('pandas>=1.1.4,<1.2.0', 'gcsfs',
+    install_requires=('pandas==0.24.2', 'gcsfs',
                       'google-datacatalog-connectors-commons', 'pyYAML',
                       'confluent-kafka', 'fastavro', 'avro'),
     setup_requires=('pytest-runner'),
