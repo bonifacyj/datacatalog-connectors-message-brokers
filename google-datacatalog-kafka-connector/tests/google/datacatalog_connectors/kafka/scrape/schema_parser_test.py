@@ -18,7 +18,9 @@ import unittest
 import json
 
 from google.datacatalog_connectors.kafka.scrape.avro_schema_parser \
-    import AvroSchemaParser, AvroSchemaField
+    import AvroSchemaParser
+from google.datacatalog_connectors.kafka.config.\
+    metadata_constants import MetadataConstants
 
 
 class SchemaParserTestCase(unittest.TestCase):
@@ -40,10 +42,13 @@ class SchemaParserTestCase(unittest.TestCase):
         schema_str = json.dumps(schema_dict)
         schema_parser = AvroSchemaParser(schema_str)
         fields = schema_parser.get_fields_names_and_types()
-        expected_fields = [
-            AvroSchemaField("string", "id"),
-            AvroSchemaField("double", "degrees")
-        ]
+        expected_fields = [{
+            MetadataConstants.FIELD_NAME: "id",
+            MetadataConstants.FIELD_TYPE: "string"
+        }, {
+            MetadataConstants.FIELD_NAME: "degrees",
+            MetadataConstants.FIELD_TYPE: "double"
+        }]
         self.maxDiff = None
         self.assertListEqual(fields, expected_fields)
 
@@ -80,14 +85,22 @@ class SchemaParserTestCase(unittest.TestCase):
         schema_str = json.dumps(schema_dict)
         schema_parser = AvroSchemaParser(schema_str)
         fields = schema_parser.get_fields_names_and_types()
-        expected_subfields = [
-            AvroSchemaField("string", "sub_field_1"),
-            AvroSchemaField("int", "sub_field_2")
-        ]
-        expected_fields = [
-            AvroSchemaField("record", "field_1", expected_subfields),
-            AvroSchemaField("record", "field_2", expected_subfields)
-        ]
+        expected_subfields = [{
+            MetadataConstants.FIELD_NAME: "sub_field_1",
+            MetadataConstants.FIELD_TYPE: "string"
+        }, {
+            MetadataConstants.FIELD_NAME: "sub_field_2",
+            MetadataConstants.FIELD_TYPE: "int"
+        }]
+        expected_fields = [{
+            MetadataConstants.FIELD_NAME: "field_1",
+            MetadataConstants.FIELD_TYPE: "record",
+            MetadataConstants.SCHEMA_SUBFIELDS: expected_subfields
+        }, {
+            MetadataConstants.FIELD_NAME: "field_2",
+            MetadataConstants.FIELD_TYPE: "record",
+            MetadataConstants.SCHEMA_SUBFIELDS: expected_subfields
+        }]
         self.maxDiff = None
         self.assertEqual(fields, expected_fields)
 
@@ -123,15 +136,26 @@ class SchemaParserTestCase(unittest.TestCase):
         schema_str = json.dumps(orig_schema)
         schema_parser = AvroSchemaParser(schema_str)
         fields = schema_parser.get_fields_names_and_types()
-        expected_subfields = [
-            AvroSchemaField("map", "map_name"),
-            AvroSchemaField("union", "favorite_number"),
-            AvroSchemaField("union", "favorite_color")
-        ]
-        expected_fields = [
-            AvroSchemaField("record", "User", expected_subfields),
-            AvroSchemaField("None", "map"),
-            AvroSchemaField("enum", "Weekdays")
-        ]
+        expected_subfields = [{
+            MetadataConstants.FIELD_NAME: "map_name",
+            MetadataConstants.FIELD_TYPE: "map"
+        }, {
+            MetadataConstants.FIELD_NAME: "favorite_number",
+            MetadataConstants.FIELD_TYPE: "union"
+        }, {
+            MetadataConstants.FIELD_NAME: "favorite_color",
+            MetadataConstants.FIELD_TYPE: "union"
+        }]
+        expected_fields = [{
+            MetadataConstants.FIELD_NAME: "User",
+            MetadataConstants.FIELD_TYPE: "record",
+            MetadataConstants.SCHEMA_SUBFIELDS: expected_subfields
+        }, {
+            MetadataConstants.FIELD_NAME: "None",
+            MetadataConstants.FIELD_TYPE: "map"
+        }, {
+            MetadataConstants.FIELD_NAME: "Weekdays",
+            MetadataConstants.FIELD_TYPE: "enum"
+        }]
         self.maxDiff = None
         self.assertEqual(fields, expected_fields)
