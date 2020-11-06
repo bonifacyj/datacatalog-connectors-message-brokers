@@ -5,6 +5,9 @@ from google.datacatalog_connectors.kafka.config.\
 
 class AvroSchemaParser:
 
+    RECORD = "record"
+    UNION = "union"
+
     def __init__(self, schema_str):
         self._parsed_schema = schema.parse(schema_str)
 
@@ -17,16 +20,16 @@ class AvroSchemaParser:
         return None
 
     def get_fields_names_and_types(self):
-        if self._parsed_schema.type == schema.RECORD \
-                or self._parsed_schema.type == schema.UNION:
+        if self._parsed_schema.type == self.RECORD \
+                or self._parsed_schema.type == self.UNION:
             return self._get_fields_names_and_types(self._parsed_schema)
         return None
 
     def _get_fields_names_and_types(self, parsed_schema):
-        if parsed_schema.type == schema.RECORD:
+        if parsed_schema.type == self.RECORD:
             fields = self._scrape_fields_from_record_schema(parsed_schema)
             return fields
-        if parsed_schema.type == schema.UNION:
+        if parsed_schema.type == self.UNION:
             nested_schemas = parsed_schema.schemas
             fields = []
             for nested_schema in nested_schemas:
@@ -50,7 +53,7 @@ class AvroSchemaParser:
         avro_fields = []
         fields = record_schema.fields
         for field in fields:
-            if field.type.type != schema.RECORD:
+            if field.type.type != self.RECORD:
                 avro_fields.append({
                     MetadataConstants.FIELD_TYPE: field.type.type,
                     MetadataConstants.FIELD_NAME: field.name

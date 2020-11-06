@@ -19,14 +19,14 @@
         {"schema_format": "AVRO",
         "schema_version": 1,
           "schema_type": "array",
-        "schema_string": "{\"type\":\"array\",\"items\":\"string\"}"
+        "schema_string": "{\"type\": \"array\", \"items\": \"string\"}"
         },
       "topic_value_schema":
         {"schema_format": "AVRO",
         "schema_version": 1,
           "schema_name": "updates",
           "schema_type": "record",
-        "schema_string": "{\"type\":\"record\",\"name\":\"updates\", \"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"degrees\",\"type\":\"double\"}, {\"type\":\"record\",\"name\":\"nested_record\", \"fields\":[{\"name\":\"subfield\",\"type\":\"string\"}]}]}",
+        "schema_string": "{\"name\": \"updates\", \"type\": \"record\", \"fields\": [{\"name\": \"id\", \"type\": \"string\"}, {\"name\": \"degrees\", \"type\": \"double\"}, {\"name\": \"another_record\", \"type\": {\"name\": \"nested_record\", \"type\": \"record\", \"fields\": [{\"name\": \"num_guests\", \"type\": \"int\"}]}}]}",
           "fields": [{
           "field_name": "id",
           "field_type": "string"
@@ -36,12 +36,12 @@
           "field_type": "double"
           },
             {
-              "field_name": "nested_record",
+              "field_name": "another_record",
               "field_type": "record",
               "subfields": [
                 {
-                  "field_name": "subfield",
-                  "field_type": "string"
+                  "field_name": "num_guests",
+                  "field_type": "int"
                 }
               ]
             }]

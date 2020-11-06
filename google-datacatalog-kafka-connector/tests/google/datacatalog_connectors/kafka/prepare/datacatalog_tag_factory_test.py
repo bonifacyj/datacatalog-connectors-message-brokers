@@ -62,12 +62,14 @@ class DataCatalogTagFactoryTest(unittest.TestCase):
             MetadataConstants.MAX_COMPACTION_LAG_TEXT: "2 d",
             MetadataConstants.TOPIC_VALUE_SCHEMA: {
                 MetadataConstants.SCHEMA_STRING: "test-schema-topic-values",
-                MetadataConstants.SCHEMA_TYPE: "AVRO",
-                MetadataConstants.SCHEMA_VERSION: 9
+                MetadataConstants.SCHEMA_FORMAT: "AVRO",
+                MetadataConstants.SCHEMA_VERSION: 9,
+                MetadataConstants.SCHEMA_TYPE: "record",
+                MetadataConstants.SCHEMA_NAME: "Calls"
             },
             MetadataConstants.TOPIC_KEY_SCHEMA: {
                 MetadataConstants.SCHEMA_STRING: "test-schema-topic-keys",
-                MetadataConstants.SCHEMA_TYPE: "AVRO",
+                MetadataConstants.SCHEMA_FORMAT: "AVRO",
                 MetadataConstants.SCHEMA_VERSION: 2
             }
         }
@@ -101,8 +103,8 @@ class DataCatalogTagFactoryTest(unittest.TestCase):
             "test-schema-topic-values",
             tag.fields[fields.payload_physical_schema.name].string_value)
         self.assertEqual(
-            "AVRO",
-            tag.fields[fields.payload_physical_schema_type.name].string_value)
+            "AVRO", tag.fields[
+                fields.payload_physical_schema_format.name].string_value)
         self.assertEqual(
             9, tag.fields[
                 fields.payload_physical_schema_version.name].double_value)
@@ -111,7 +113,13 @@ class DataCatalogTagFactoryTest(unittest.TestCase):
             tag.fields[fields.keys_physical_schema.name].string_value)
         self.assertEqual(
             "AVRO",
-            tag.fields[fields.keys_physical_schema_type.name].string_value)
+            tag.fields[fields.keys_physical_schema_format.name].string_value)
         self.assertEqual(
             2,
             tag.fields[fields.keys_physical_schema_version.name].double_value)
+        self.assertEqual(
+            "record",
+            tag.fields[fields.payload_physical_schema_type.name].string_value)
+        self.assertEqual(
+            "Calls",
+            tag.fields[fields.payload_physical_schema_name.name].string_value)

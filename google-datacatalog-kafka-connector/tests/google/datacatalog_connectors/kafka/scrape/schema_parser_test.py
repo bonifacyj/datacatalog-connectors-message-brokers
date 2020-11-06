@@ -113,14 +113,8 @@ class SchemaParserTestCase(unittest.TestCase):
             "name":
                 "User",
             "fields": [{
-                "name": "map_name",
-                "type": {
-                    "type": "map",
-                    "values": "long"
-                }
-            }, {
-                "name": "favorite_number",
-                "type": ["int", "null"]
+                "name": "pet_name",
+                "type": "string"
             }, {
                 "name": "favorite_color",
                 "type": ["string", "null"]
@@ -136,20 +130,13 @@ class SchemaParserTestCase(unittest.TestCase):
         schema_str = json.dumps(orig_schema)
         schema_parser = AvroSchemaParser(schema_str)
         fields = schema_parser.get_fields_names_and_types()
-        expected_subfields = [{
-            MetadataConstants.FIELD_NAME: "map_name",
-            MetadataConstants.FIELD_TYPE: "map"
-        }, {
-            MetadataConstants.FIELD_NAME: "favorite_number",
-            MetadataConstants.FIELD_TYPE: "union"
+
+        expected_fields = [{
+            MetadataConstants.FIELD_NAME: "pet_name",
+            MetadataConstants.FIELD_TYPE: "string"
         }, {
             MetadataConstants.FIELD_NAME: "favorite_color",
             MetadataConstants.FIELD_TYPE: "union"
-        }]
-        expected_fields = [{
-            MetadataConstants.FIELD_NAME: "User",
-            MetadataConstants.FIELD_TYPE: "record",
-            MetadataConstants.SCHEMA_SUBFIELDS: expected_subfields
         }, {
             MetadataConstants.FIELD_NAME: "None",
             MetadataConstants.FIELD_TYPE: "map"
@@ -157,5 +144,6 @@ class SchemaParserTestCase(unittest.TestCase):
             MetadataConstants.FIELD_NAME: "Weekdays",
             MetadataConstants.FIELD_TYPE: "enum"
         }]
+
         self.maxDiff = None
         self.assertEqual(fields, expected_fields)
