@@ -23,7 +23,7 @@ from google.datacatalog_connectors.kafka.config.\
     metadata_constants import MetadataConstants
 
 
-class SchemaParserTestCase(unittest.TestCase):
+class AvroSchemaParserTestCase(unittest.TestCase):
 
     def test_get_fields_from_simple_schema(self):
         schema_dict = {
