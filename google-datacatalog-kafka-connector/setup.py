@@ -37,11 +37,11 @@ setuptools.setup(
     },
     include_package_data=True,
     install_requires=('pandas', 'gcsfs',
-                      'google-datacatalog-connectors-commons', 'pyYAML',
+                      'google-datacatalog-connectors-commons>=0.5.2,<0.6.0', 'pyYAML',
                       'confluent-kafka', 'fastavro', 'avro'),
     setup_requires=('pytest-runner'),
     tests_require=('mock==3.0.5', 'pytest', 'pytest-cov',
-                   'google-datacatalog-connectors-commons-test'),
+                   'google-datacatalog-connectors-commons-test>=0.5.1,<0.6.0'),
     classifiers=[
         release_status,
         'Programming Language :: Python :: 3.7',
