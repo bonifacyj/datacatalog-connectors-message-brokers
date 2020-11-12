@@ -16,6 +16,7 @@
 
 import confluent_kafka
 import mock
+import json
 from google.cloud import datacatalog_v1beta1
 from confluent_kafka.admin import ClusterMetadata, \
     TopicMetadata, BrokerMetadata, PartitionMetadata,\
@@ -87,9 +88,10 @@ class FakeKafkaSchemaRegistryClient(mock.MagicMock):
         return ["temperature-key", "temperature-value", "test-subject"]
 
     def get_latest_version(self, subject_name):
-        test_schema_str = '{"type":"record","name":"updates", ' \
-                          '"fields":[{"name":"id","type":"string"},' \
-                          '{"name":"degrees","type":"double"}]}'
+        if subject_name == "temperature-key":
+            test_schema_str = get_test_avro_schema_topic_keys()
+        else:
+            test_schema_str = get_test_avro_schema_topic_values()
         schema = Schema(test_schema_str, schema_type="AVRO")
         registered_schema = RegisteredSchema(schema_id=1,
                                              schema=schema,
@@ -135,6 +137,19 @@ def get_test_topic_entry():
     entry.display_name = 'temperature'
     entry.name = 'mocked_entry_path'
     entry.linked_resource = '//metadata_host//temperature'
+    subcolumns = [
+        datacatalog_v1beta1.types.ColumnSchema(column="num_guests", type="int")
+    ]
+    entry.schema.columns.append(
+        datacatalog_v1beta1.types.ColumnSchema(column="id", type="string"))
+    entry.schema.columns.append(
+        datacatalog_v1beta1.types.ColumnSchema(column="degrees",
+                                               type="double"))
+    entry.schema.columns.append(
+        datacatalog_v1beta1.types.ColumnSchema(column="another_record",
+                                               type="record",
+                                               subcolumns=subcolumns))
+
     return entry
 
 
@@ -150,6 +165,7 @@ def get_test_cluster_entry():
     entry.display_name = 'Kafka cluster 1234'
     entry.name = 'mocked_entry_path'
     entry.linked_resource = '//metadata_host//1234'
+
     return entry
 
 
@@ -167,3 +183,36 @@ def get_mock_config_description():
             ConfigEntry('max.compaction.lag.ms', '9223372036854775807')
     }
     return config_desc
+
+
+def get_test_avro_schema_topic_values():
+    orig_schema = {
+        "name":
+            "updates",
+        "type":
+            "record",
+        "fields": [{
+            "name": "id",
+            "type": "string"
+        }, {
+            "name": "degrees",
+            "type": "double"
+        }, {
+            "name": "another_record",
+            "type": {
+                "name": "nested_record",
+                "type": "record",
+                "fields": [{
+                    "name": "num_guests",
+                    "type": "int"
+                }]
+            }
+        }]
+    }
+    avro_schema = json.dumps(orig_schema)
+    return avro_schema
+
+
+def get_test_avro_schema_topic_keys():
+    orig_schema = {"type": "array", "items": "string"}
+    return json.dumps(orig_schema)

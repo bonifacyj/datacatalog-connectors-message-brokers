@@ -16,14 +16,36 @@
       "max_compaction_lag_text": "292471208y 247d 7h 12min 55sec 807.0ms",
       "cleanup_policy": "delete, compact",
       "topic_key_schema":
-        {"schema_type": "AVRO",
+        {"schema_format": "AVRO",
         "schema_version": 1,
-        "schema_string": "{\"type\":\"record\",\"name\":\"updates\", \"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"degrees\",\"type\":\"double\"}]}"
+          "schema_type": "array",
+        "schema_string": "{\"type\": \"array\", \"items\": \"string\"}"
         },
       "topic_value_schema":
-        {"schema_type": "AVRO",
+        {"schema_format": "AVRO",
         "schema_version": 1,
-        "schema_string": "{\"type\":\"record\",\"name\":\"updates\", \"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"degrees\",\"type\":\"double\"}]}"
+          "schema_name": "updates",
+          "schema_type": "record",
+        "schema_string": "{\"name\": \"updates\", \"type\": \"record\", \"fields\": [{\"name\": \"id\", \"type\": \"string\"}, {\"name\": \"degrees\", \"type\": \"double\"}, {\"name\": \"another_record\", \"type\": {\"name\": \"nested_record\", \"type\": \"record\", \"fields\": [{\"name\": \"num_guests\", \"type\": \"int\"}]}}]}",
+          "fields": [{
+          "field_name": "id",
+          "field_type": "string"
+        },
+          {
+            "field_name": "degrees",
+          "field_type": "double"
+          },
+            {
+              "field_name": "another_record",
+              "field_type": "record",
+              "subfields": [
+                {
+                  "field_name": "num_guests",
+                  "field_type": "int"
+                }
+              ]
+            }]
+
         }
     }
   ]

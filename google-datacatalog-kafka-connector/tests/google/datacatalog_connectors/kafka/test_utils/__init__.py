@@ -18,9 +18,12 @@ from .test_utils import FakeDataCatalogEntryFactory, \
     FakeKafkaSchemaRegistryClient, FakeKafkaAdminClient, \
     FakeKafkaAdminClientEmptyCluster,\
     get_test_topic_entry, get_test_cluster_entry,\
-    mock_parse_args
+    mock_parse_args, get_test_avro_schema_topic_values, \
+    get_test_avro_schema_topic_keys
 
 __all__ = ('FakeDataCatalogEntryFactory', 'FakeKafkaAdminClient',
            'FakeKafkaSchemaRegistryClient', 'get_test_topic_entry',
            'get_test_cluster_entry', 'mock_parse_args',
-           'FakeKafkaAdminClientEmptyCluster')
+           'FakeKafkaAdminClientEmptyCluster',
+           'get_test_avro_schema_topic_values',
+           'get_test_avro_schema_topic_keys')

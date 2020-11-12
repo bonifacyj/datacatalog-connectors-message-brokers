@@ -23,27 +23,49 @@ from google.datacatalog_connectors.kafka.scrape.\
 from google.datacatalog_connectors.kafka.config import MetadataConstants
 
 
-class MetadataScraperTestCase(unittest.TestCase):
+class SchemaRegistryTestCase(unittest.TestCase):
 
     def test_scrape_schema_metadata_returns_metadata_dict(self):
         schema_registry_client = test_utils.FakeKafkaSchemaRegistryClient()
         scraper = SchemaRegistryScraper(schema_registry_client)
         expected_metadata = {
             MetadataConstants.TOPIC_KEY_SCHEMA: {
-                MetadataConstants.SCHEMA_TYPE: "AVRO",
-                MetadataConstants.SCHEMA_VERSION: 1,
+                MetadataConstants.SCHEMA_FORMAT:
+                    "AVRO",
+                MetadataConstants.SCHEMA_VERSION:
+                    1,
+                MetadataConstants.SCHEMA_TYPE:
+                    "array",
                 MetadataConstants.SCHEMA_STRING:
-                    '{"type":"record","name":"updates", '
-                    '"fields":[{"name":"id","type":"string"},'
-                    '{"name":"degrees","type":"double"}]}'
+                    test_utils.get_test_avro_schema_topic_keys()
             },
             MetadataConstants.TOPIC_VALUE_SCHEMA: {
-                MetadataConstants.SCHEMA_TYPE: "AVRO",
-                MetadataConstants.SCHEMA_VERSION: 1,
+                MetadataConstants.SCHEMA_FORMAT:
+                    "AVRO",
+                MetadataConstants.SCHEMA_VERSION:
+                    1,
+                MetadataConstants.SCHEMA_TYPE:
+                    "record",
+                MetadataConstants.SCHEMA_NAME:
+                    "updates",
                 MetadataConstants.SCHEMA_STRING:
-                    '{"type":"record","name":"updates", '
-                    '"fields":[{"name":"id","type":"string"},'
-                    '{"name":"degrees","type":"double"}]}'
+                    test_utils.get_test_avro_schema_topic_values(),
+                MetadataConstants.SCHEMA_FIELDS: [{
+                    MetadataConstants.FIELD_NAME: "id",
+                    MetadataConstants.FIELD_TYPE: "string"
+                }, {
+                    MetadataConstants.FIELD_NAME: "degrees",
+                    MetadataConstants.FIELD_TYPE: "double"
+                }, {
+                    MetadataConstants.FIELD_NAME:
+                        "another_record",
+                    MetadataConstants.FIELD_TYPE:
+                        "record",
+                    MetadataConstants.SCHEMA_SUBFIELDS: [{
+                        MetadataConstants.FIELD_NAME: "num_guests",
+                        MetadataConstants.FIELD_TYPE: "int"
+                    }]
+                }]
             }
         }
         metadata = scraper.scrape_schema_metadata(topic_name="temperature")
